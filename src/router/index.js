@@ -19,6 +19,14 @@ const router = createRouter({
         meta: {
             'hidden': true
         }
+    }, {
+        path: '/doctor',
+        name: 'doctor',
+        component: () => import('@/views/doctor/Doctor.vue')
+    }, {
+        path: '/doctor-detail/:doctorID',
+        name: 'doctor-detail',
+        component: () => import('@/views/doctor/DoctorDetail.vue')
     },]
 })
 
