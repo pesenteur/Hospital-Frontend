@@ -1,6 +1,6 @@
 <template>
     <el-config-provider :locale="zhCn">
-        <hospital-header/>
+        <hospital-header v-if="!$route.meta.hidden"/>
         <router-view/>
         <hospital-footer/>
     </el-config-provider>

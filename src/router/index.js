@@ -5,6 +5,20 @@ const router = createRouter({
     routes: [{
         path: '/',
         component: () => import('@/views/home/Home.vue')
+    }, {
+        path: '/login',
+        name: 'login',
+        component: () => import('@/views/account/Login.vue'),
+        meta: {
+            'hidden': true
+        }
+    }, {
+        path: '/register',
+        name: 'register',
+        component: () => import('@/views/account/Register.vue'),
+        meta: {
+            'hidden': true
+        }
     },]
 })
 
