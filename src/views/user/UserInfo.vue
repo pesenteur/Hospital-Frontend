@@ -19,7 +19,9 @@
                 </template>
                 <div class="info">
                     18100000000
-                    <el-icon class="edit"><Edit/></el-icon>
+                    <el-icon class="edit">
+                        <Edit/>
+                    </el-icon>
                 </div>
             </el-descriptions-item>
             <el-descriptions-item>
@@ -33,7 +35,9 @@
                 </template>
                 <div class="info">
                     北京市海淀区学院路37号北京航空航天大学
-                    <el-icon class="edit"><Edit/></el-icon>
+                    <el-icon class="edit">
+                        <Edit/>
+                    </el-icon>
                 </div>
             </el-descriptions-item>
         </el-descriptions>
@@ -50,18 +54,22 @@ import {Edit, Iphone, OfficeBuilding} from "@element-plus/icons-vue";
     margin: 0 auto;
     padding-top: 40px;
 }
+
 .cell-item {
     display: flex;
     align-items: center;
 }
+
 .icon {
     margin-right: 8px;;
 }
+
 .info {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
+
 .edit:hover {
     cursor: pointer;
 }

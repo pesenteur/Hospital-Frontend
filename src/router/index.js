@@ -43,6 +43,10 @@ const router = createRouter({
         path: '/patient',
         name: 'patient',
         component: () => import('@/views/user/Patient.vue')
+    }, {
+        path: '/my-appointment',
+        name: 'my-appointment',
+        component: ()=>import('@/views/user/MyAppointment.vue')
     },]
 })
 
