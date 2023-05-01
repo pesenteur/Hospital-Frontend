@@ -58,8 +58,12 @@ const router = createRouter({
     }, {
         path: '/leave',
         name: 'leave',
-        component: ()=>import('@/views/leave/Leave.vue')
-    },]
+        component: () => import('@/views/leave/Leave.vue')
+    }, {
+        path: '/message',
+        name: 'message',
+        component: () => import('@/views/message/Message.vue')
+    }]
 })
 
 export default router
