@@ -55,6 +55,10 @@ const router = createRouter({
         path: '/diagnose',
         name: 'diagnose',
         component: () => import('@/views/diagnose/Diagnose.vue')
+    }, {
+        path: '/leave',
+        name: 'leave',
+        component: ()=>import('@/views/leave/Leave.vue')
     },]
 })
 
