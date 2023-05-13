@@ -1,0 +1,11 @@
+{
+  "result": "1",
+  "data|6": [
+    {
+      "vacancy_id": "@natural",
+      "start_time": "@date(yyyy-MM-dd hh:mm:ss)",
+      "end_time": "@date(yyyy-MM-dd hh:mm:ss)",
+      "count|0-10": 1
+    }
+  ]
+}

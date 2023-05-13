@@ -19,7 +19,7 @@
             <el-divider/>
             <div class="info">
                 <div>就诊日期</div>
-                <div>2023年4月17日（星期二）上午</div>
+                <div>{{ appointment_date }}</div>
             </div>
             <el-divider/>
             <div class="info">
@@ -80,9 +80,54 @@
 
 <script setup>
 import {Plus} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import {computed, inject, onMounted, ref} from "vue";
+import {useRoute} from "vue-router";
+
+const $api = inject('$api');
+const route = useRoute();
+const {doctorID, date, half} = route.params;
 
 const time = ref();
+
+const appointment_date = computed(()=>{
+    const chinese = ['日', '一', '二', '三', '四', '五', '六'];
+    const temp = new Date(date);
+    const year = temp.getUTCFullYear();
+    const month = temp.getMonth();
+    const day = temp.getDate();
+    const weekday = temp.getDay();
+    return `${year}年${month}月${day}日（星期${chinese[weekday]}）${half}`;
+});
+
+// 存储就诊人列表
+const patients = ref([]);
+// 获取就诊人列表
+async function getPatients() {
+
+}
+
+// 存储放号信息
+const vacancyDetail = ref([]);
+// 获取放号信息
+async function getVacancyDetail() {
+    const result = await $api.appointment.requestVacancyDetail(
+        doctorID,
+        date,
+        half === '上午' ? 1:0
+    );
+    if (result.result === 1) {
+        vacancyDetail.value = result.data;
+    } else {
+        ElMessage({
+            message: "获取放号数据失败，请刷新页面",
+            type: 'error'
+        });
+    }
+}
+
+onMounted(async ()=>{
+    await getVacancyDetail();
+})
 </script>
 
 <style scoped>

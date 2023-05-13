@@ -6,26 +6,73 @@
                     :clearable="true"
                     :prefix-icon="Search"
                     size="large"
+                    @keydown.enter="search"
             >
                 <template #append>
-                    <el-button>搜索</el-button>
+                    <el-button @click="search">搜索</el-button>
                 </template>
             </el-input>
         </div>
         <div class="doctors">
-            <doctor-card/>
-            <doctor-card/>
-            <doctor-card/>
+            <doctor-card v-for="doctor in doctorList" :key="doctor.id"
+                         :data="doctor"
+            />
         </div>
+        <el-empty
+            description="什么都搜不到，试试换个关键词吧！"
+            v-show="!doctorList.length"
+        />
     </div>
 </template>
 
 <script setup>
 import DoctorCard from "@/views/doctor/DoctorCard.vue";
 import {Search} from "@element-plus/icons-vue";
-import {ref} from "vue";
+import {inject, onMounted, ref, watch} from "vue";
+import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 
-const keyWord = ref('');
+
+const route = useRoute();
+const router = useRouter();
+const $api = inject('$api');
+
+// 搜索关键词
+const keyWord = ref(route.query.keyWord);
+
+const doctorList = ref([]);
+// 获取医生数据
+async function getDoctorList() {
+    let result = await $api.doctor.requestDoctorList(keyWord.value);
+    if (result.result === 1) {
+        doctorList.value = result.data;
+    } else {
+        ElMessage({
+            message: "获取医生数据失败，请刷新页面",
+            type: 'error'
+        })
+    }
+}
+
+onMounted(async ()=>{
+    await getDoctorList();
+});
+
+// 输入框搜索
+function search(){
+    router.push({
+        path: '/doctor',
+        query: {keyWord: keyWord.value || undefined}
+    });
+}
+
+onBeforeRouteUpdate(async (to, from)=>{
+    // 如果跳转到/doctor，说明在进行搜素，需要发送请求。
+    if (to.path === '/doctor') {
+        // 通过导航栏跳转到/doctor时，keyWord应清空。
+        keyWord.value = to.query.keyWord;
+        await getDoctorList();
+    }
+});
 </script>
 
 <style scoped>
@@ -41,6 +88,7 @@ const keyWord = ref('');
 .doctors {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     margin-top: 60px;
 }
 </style>

@@ -1,0 +1,16 @@
+{
+  "result": 1,
+  "data|5-20": [{
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph",
+    "available|1-2": [
+      {
+        "is_morning": true,
+        "time": "@date('yyyy-MM-dd')",
+        "num|0-5": 1
+      }]
+  }]
+}

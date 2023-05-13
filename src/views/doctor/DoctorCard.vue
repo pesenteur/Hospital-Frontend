@@ -2,14 +2,14 @@
     <el-card shadow="hover" class="card">
         <div class="first">
             <div>
-                <el-avatar size="large"/>
+                <el-avatar size="large" :src="data.image"/>
                 <div class="short">
-                    <div class="name">医生名</div>
-                    <div class="department">科室</div>
+                    <div class="name">{{ data.name }}</div>
+                    <div class="department">{{ data.department }}</div>
                 </div>
             </div>
             <div>
-                <router-link to="/doctor-detail/10001" class="more">
+                <router-link :to="`/doctor-detail/${data.id}`" class="more">
                     查看更多
                     <el-icon><DArrowRight/></el-icon>
                 </router-link>
@@ -18,7 +18,7 @@
         <el-divider/>
         <div>
             <el-scrollbar>
-                <div class="detail">这是医生的具体介绍</div>
+                <div class="detail">{{ data.introduction }}</div>
             </el-scrollbar>
         </div>
     </el-card>
@@ -26,12 +26,15 @@
 
 <script setup>
 import {DArrowRight} from "@element-plus/icons-vue";
+
+const props = defineProps(['data']);
 </script>
 
 <style scoped>
 .card {
     width: 330px;
     height: 280px;
+    margin: 20px 0;
 }
 
 .first {
@@ -62,12 +65,13 @@ import {DArrowRight} from "@element-plus/icons-vue";
 }
 
 .department {
+    margin-top: 3px;
     font-weight: bold;
     font-size: 1.1em;
 }
 
 .detail {
-    width: 200px;
-    height: 60px;
+    width: 100%;
+    height: 135px;
 }
 </style>
