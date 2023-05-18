@@ -3,7 +3,7 @@ import axios from 'axios'
 
 // 1. 创建axios实例
 const requests = axios.create({
-    baseURL: '/mock',
+    baseURL: '/api',
     timeout: 5000
 });
 
