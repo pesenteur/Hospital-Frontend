@@ -5,6 +5,7 @@ import router from './router'
 import 'dayjs/locale/zh-cn'
 import '@/mock/mockServer'
 import api from "@/api";
+import 'element-plus/dist/index.css'
 
 const app = createApp(App);
 
