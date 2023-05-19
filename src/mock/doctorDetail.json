@@ -1,0 +1,19 @@
+{
+  "result": 1,
+  "data": {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph",
+    "available": [
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')",
+      "@date('yyyy年MM月dd日 a')"
+    ]
+  }
+}

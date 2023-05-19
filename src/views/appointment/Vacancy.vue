@@ -1,38 +1,48 @@
 <template>
     <el-card shadow="hover" class="card">
         <div class="introduction">
-            <el-avatar size="large"/>
+            <el-avatar size="large" :src="data.image"/>
             <div class="text">
-                <div class="name">医生名</div>
+                <div class="name">{{ data.name }}</div>
+                <div class="department">{{ data.department }}</div>
                 <el-scrollbar>
-                    <div class="detail">这是医生的具体介绍</div>
+                    <div class="detail">{{ data.introduction }}</div>
                 </el-scrollbar>
             </div>
         </div>
         <el-divider/>
         <div class="available">
-            <router-link to="/appointment-detail/10000/2023-04-17/am">
-                <el-button class="available-item">
-                    <div>04-17（星期一）上午</div>
-                </el-button>
-            </router-link>
-            <router-link to="/appointment-detail/10000/2023-04-17/pm">
-                <el-button class="available-item" disabled>
-                    <div>04-17（星期一）下午</div>
-                    <div>约满</div>
-                </el-button>
-            </router-link>
+            <el-button
+                v-for="(item, index) in data.available"
+                :key="index"
+                class="available-item"
+                :disabled="!item.num"
+                @click="$router.push(`/appointment-detail/${data.id}/${item.time}/${item.is_morning?'上午':'下午'}`)"
+            >
+                <div>{{ format(item) }}</div>
+                <div v-if="!item.num">约满</div>
+            </el-button>
         </div>
     </el-card>
 </template>
 
 <script setup>
+const props = defineProps(['data']);
+
+const format = (item)=>{
+    const chinese = ['日', '一', '二', '三', '四', '五', '六'];
+    const date = new Date(item.time);
+    const month = date.getMonth();
+    const day = date.getDate();
+    const weekday = date.getDay();
+    return `${month}月${day}日（星期${chinese[weekday]}）${item.is_morning?'上午':'下午'}`;
+}
 </script>
 
 <style scoped>
 .card {
     width: 330px;
-    height: 280px;
+    height: 320px;
 }
 
 .introduction {
@@ -41,6 +51,10 @@
 
 .text {
     margin-left: 30px;
+}
+
+.text > *:not(:last-child) {
+    margin-bottom: 5px;
 }
 
 .name {
@@ -52,6 +66,7 @@
     font-size: 0.8em;
     width: 200px;
     height: 60px;
+    overflow: auto;
 }
 
 .available {
@@ -59,7 +74,7 @@
     flex-direction: column;
 }
 
-.available>*{
+.available > * {
     margin: 12px 0;
 }
 

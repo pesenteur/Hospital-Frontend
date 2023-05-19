@@ -32,7 +32,7 @@ const router = createRouter({
         name: 'appointment',
         component: () => import('@/views/appointment/Appointment.vue')
     }, {
-        path: '/appointment-detail/:doctorID/:date/:time',
+        path: '/appointment-detail/:doctorID/:date/:half',
         name: 'appointment-detail',
         component: () => import('@/views/appointment/AppointmentDetail.vue')
     }, {

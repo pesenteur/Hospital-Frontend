@@ -1,0 +1,46 @@
+{
+  "result": 1,
+  "data": [{
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }, {
+    "id": "@natural",
+    "name": "@cname",
+    "department": "@ctitle(2)",
+    "image": "@dataImage",
+    "introduction": "@cparagraph"
+  }]
+}
