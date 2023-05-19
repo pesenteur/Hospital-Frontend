@@ -44,24 +44,25 @@
 
 <script setup>
 import {inject, onMounted, ref} from "vue";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 
 const router = useRouter();
+const route = useRoute();
 const $api = inject('$api');
 
 // 存储医生的数据
 const detail = ref({});
 // 获取医生的数据
 async function getDetail() {
-    const result = await $api.doctor.requestDoctorDetail();
+    const result = await $api.doctor.requestDoctorDetail(route.params.doctorID);
     if (result.result === 1) {
         detail.value = result.data;
     } else {
         ElMessage({
             message: '获取医生数据失败，请刷新页面',
             type: 'error'
-        })
+        });
     }
 }
 
@@ -116,6 +117,7 @@ function goBack() {
 .info>div:first-child{
     margin-right: 30px;
     width: 100px;
+    font-size: 18px;
 }
 
 .available {
