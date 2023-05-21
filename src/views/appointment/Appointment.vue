@@ -20,7 +20,7 @@
                         :editable="false"
                         :clearable="false"
                         :disabled-date="checkDate"
-                        value-format="YYYY/MM/DD"
+                        value-format="YYYY-MM-DD"
                 />
             </div>
             <div class="filter-item">
@@ -61,7 +61,7 @@ const departmentList = ref([]);
 // 获取部门数据
 async function getDepartmentList() {
     const result = await $api.appointment.requestDepartmentList();
-    if (result.result === 1) {
+    if (result.result === "1") {
         departmentList.value = result.data;
     } else {
         ElMessage({
@@ -98,8 +98,8 @@ const vacancyList = ref([]);
 
 // 获取放号信息
 async function getVacancyList() {
-    const result = await $api.appointment.requestVacancyList(department.value[1], date.value);
-    if (result.result === 1) {
+    const result = await $api.appointment.requestVacancyList(department.value, date.value);
+    if (result.result === "1") {
         vacancyList.value = result.data;
     } else {
         ElMessage({

@@ -15,8 +15,8 @@
                 <el-table-column label="Operations">
                     <template #default="scope">
                         <el-button
-                                size="small"
-                                type="danger"
+                            size="small"
+                            type="danger"
                         >
                             撤销请假
                         </el-button>

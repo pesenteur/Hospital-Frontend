@@ -26,7 +26,7 @@ const carouselList = ref([]);
 // 获取轮播图信息
 async function getCarouselList() {
     const result = await $api.home.requestCarouselList();
-    if (result.result === 1) {
+    if (result.result === "1") {
         carouselList.value = result.data;
     } else {
         ElMessage({
@@ -41,7 +41,7 @@ const notificationList = ref();
 // 获取通知信息
 async function getNotificationList() {
     const result = await $api.home.requestNotificationList();
-    if (result.result === 1) {
+    if (result.result === "1") {
         notificationList.value = result.data;
     } else {
         ElMessage({
@@ -56,7 +56,7 @@ const newsList = ref();
 // 获取新闻数据
 async function getNewsList() {
     const result = await $api.home.requestNewsList();
-    if (result.result === 1) {
+    if (result.result === "1") {
         newsList.value = result.data;
     } else {
         ElMessage({

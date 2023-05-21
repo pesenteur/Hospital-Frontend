@@ -45,7 +45,7 @@ const doctorList = ref([]);
 // 获取医生数据
 async function getDoctorList() {
     let result = await $api.doctor.requestDoctorList(keyWord.value);
-    if (result.result === 1) {
+    if (result.result === "1") {
         doctorList.value = result.data;
     } else {
         ElMessage({

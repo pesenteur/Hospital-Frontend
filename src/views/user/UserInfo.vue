@@ -19,7 +19,7 @@
                 </template>
                 <div class="info">
                     18100000000
-                    <el-icon class="edit">
+                    <el-icon class="operation">
                         <Edit/>
                     </el-icon>
                 </div>
@@ -35,7 +35,7 @@
                 </template>
                 <div class="info">
                     北京市海淀区学院路37号北京航空航天大学
-                    <el-icon class="edit">
+                    <el-icon class="operation">
                         <Edit/>
                     </el-icon>
                 </div>
@@ -70,7 +70,7 @@ import {Edit, Iphone, OfficeBuilding} from "@element-plus/icons-vue";
     justify-content: space-between;
 }
 
-.edit:hover {
+.operation:hover {
     cursor: pointer;
 }
 </style>

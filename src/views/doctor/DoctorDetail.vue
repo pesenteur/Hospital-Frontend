@@ -56,7 +56,7 @@ const detail = ref({});
 // 获取医生的数据
 async function getDetail() {
     const result = await $api.doctor.requestDoctorDetail(route.params.doctorID);
-    if (result.result === 1) {
+    if (result.result === "1") {
         detail.value = result.data;
     } else {
         ElMessage({
@@ -66,8 +66,8 @@ async function getDetail() {
     }
 }
 
-onMounted(async ()=>{
-    await getDetail();
+onMounted(()=>{
+    getDetail();
 });
 
 function goBack() {

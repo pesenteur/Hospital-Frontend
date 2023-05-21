@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
 import accountAPI from "@/api/account";
-import {getToken, setToken} from "@/utils/token";
+import {getToken, setToken, clearToken} from "@/utils/token";
 
 const state = ()=>{
     return {
@@ -43,6 +43,11 @@ const actions = {
             return "验证码已发送";
         }
         return Promise.reject(result.message);
+    },
+    Handle401() {
+        this.token = undefined;
+        this.userInfo = {};
+        clearToken();
     }
 }
 

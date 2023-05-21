@@ -1,13 +1,18 @@
 <template>
     <div class="main">
+        <el-page-header @back="goBack">
+            <template #content>
+                <span class="header-title"> 医生预约 </span>
+            </template>
+        </el-page-header>
         <el-card shadow="never" class="card">
             <div class="introduction">
-                <el-avatar size="large"/>
+                <el-avatar size="large" :src="doctorInfo.image"/>
                 <div class="text">
-                    <div class="name">医生名</div>
-                    <div>科室</div>
+                    <div class="name">{{ doctorInfo.name }}</div>
+                    <div>{{ doctorInfo.department }}</div>
                     <el-scrollbar>
-                        <div class="detail">这是医生的具体介绍</div>
+                        <div class="detail">{{ doctorInfo.introduction }}</div>
                     </el-scrollbar>
                 </div>
             </div>
@@ -19,7 +24,7 @@
             <el-divider/>
             <div class="info">
                 <div>就诊日期</div>
-                <div>{{ appointment_date }}</div>
+                <div>{{ appointmentDate }}</div>
             </div>
             <el-divider/>
             <div class="info">
@@ -29,7 +34,13 @@
             <el-divider/>
             <div class="info">
                 <div>选择就诊人</div>
-                <el-select>
+                <el-select v-model="selectPatient">
+                    <el-option
+                        v-for="patient in patients"
+                        :key="patient.id"
+                        :value="patient.id"
+                        :label="patient.name"
+                    />
                     <el-option value="add">
                         <el-icon>
                             <Plus/>
@@ -43,36 +54,34 @@
                 <div>
                     预约时间段
                 </div>
-                <el-radio-group class="available" v-model="time">
-                    <el-radio-button class="available-item" label="8">
-                        <div>08:01-08:30</div>
-                        <div>余10</div>
-                    </el-radio-button>
-                    <el-radio-button class="available-item" disabled label="8.5">
-                        <div>08:31-09:00</div>
-                        <div>约满</div>
-                    </el-radio-button>
-                    <el-radio-button class="available-item" label="9">
-                        <div>09:01-09:30</div>
-                        <div>余10</div>
-                    </el-radio-button>
-                    <el-radio-button class="available-item" label="9.5">
-                        <div>09:31-10:00</div>
-                        <div>余10</div>
-                    </el-radio-button>
-                    <el-radio-button class="available-item" label="10">
-                        <div>10:01-10:30</div>
-                        <div>余10</div>
-                    </el-radio-button>
-                    <el-radio-button class="available-item" label="10.5">
-                        <div>10:31-11:00</div>
-                        <div>余10</div>
+                <el-radio-group class="available" v-model="appointmentTime">
+                    <el-radio-button
+                        v-for="available in vacancyDetail"
+                        :key="available.vacancy_id"
+                        :label="available.start_time"
+                        :disabled="!available.left"
+                        class="available-item"
+                    >
+                        <div v-text="availableFormater(available)"></div>
+                        <div>余{{ available.left }}</div>
                     </el-radio-button>
                 </el-radio-group>
             </div>
             <div class="button">
-                <el-button type="primary" size="large">确认</el-button>
-                <el-button size="large" :plain="true">取消</el-button>
+                <el-button
+                    type="primary"
+                    size="large"
+                    @click="makeAppointment"
+                >
+                    确认
+                </el-button>
+                <el-button
+                    size="large"
+                    :plain="true"
+                    @click="goBack"
+                >
+                    取消
+                </el-button>
             </div>
         </el-card>
     </div>
@@ -80,16 +89,17 @@
 
 <script setup>
 import {Plus} from "@element-plus/icons-vue";
-import {computed, inject, onMounted, ref} from "vue";
-import {useRoute} from "vue-router";
+import {computed, inject, onMounted, ref, watch} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
 
 const $api = inject('$api');
 const route = useRoute();
+const router = useRouter();
 const {doctorID, date, half} = route.params;
 
-const time = ref();
-
-const appointment_date = computed(()=>{
+// 格式化预约日期
+const appointmentDate = computed(()=>{
     const chinese = ['日', '一', '二', '三', '四', '五', '六'];
     const temp = new Date(date);
     const year = temp.getUTCFullYear();
@@ -99,13 +109,46 @@ const appointment_date = computed(()=>{
     return `${year}年${month}月${day}日（星期${chinese[weekday]}）${half}`;
 });
 
+// 存储医生信息
+const doctorInfo = ref({});
+// 获取医生信息
+async function getDoctorInfo() {
+    const result = await $api.doctor.requestDoctorDetail(doctorID);
+    if (result.result === "1") {
+        doctorInfo.value = result.data;
+    } else {
+        ElMessage({
+            message: '获取医生数据失败，请刷新页面',
+            type: 'error'
+        });
+    }
+}
+
+// 存储选择的就诊人
+const selectPatient = ref();
 // 存储就诊人列表
 const patients = ref([]);
 // 获取就诊人列表
 async function getPatients() {
-
+    const result = await $api.user.requestPatients();
+    if (result.result === "1") {
+        patients.value = result.data;
+    } else {
+        ElMessage({
+            message: "获取就诊人数据失败，请刷新页面",
+            type: 'error'
+        });
+    }
 }
+// 选择添加就诊人时，跳转到/patient
+watch(selectPatient, (newValue)=>{
+    if (newValue === 'add') {
+        router.push('/patient');
+    }
+});
 
+// 存储选择的预约时段
+const appointmentTime = ref();
 // 存储放号信息
 const vacancyDetail = ref([]);
 // 获取放号信息
@@ -115,7 +158,7 @@ async function getVacancyDetail() {
         date,
         half === '上午' ? 1:0
     );
-    if (result.result === 1) {
+    if (result.result === "1") {
         vacancyDetail.value = result.data;
     } else {
         ElMessage({
@@ -124,10 +167,66 @@ async function getVacancyDetail() {
         });
     }
 }
+// 格式化可预约时间段
+function availableFormater(available) {
+    const start = new Date(available.start_time);
+    const end = new Date(available.end_time);
+    let result = '';
+    result += start.getHours() < 10 ? '0' + start.getHours() : start.getHours();
+    result += ':';
+    result += start.getMinutes() < 10 ? '0' + start.getMinutes() : start.getMinutes();
+    result += '-';
+    result += end.getHours() < 10 ? '0' + end.getHours() : end.getHours();
+    result += ':';
+    result += end.getMinutes() < 10 ? '0' + end.getMinutes() : end.getMinutes();
+    return result;
+}
 
-onMounted(async ()=>{
-    await getVacancyDetail();
-})
+// 点击确定的回调——进行预约
+async function makeAppointment() {
+    if (!selectPatient.value || selectPatient.value === 'add') {
+        ElMessage({
+            message: "请选择就诊人",
+            type: 'error'
+        });
+        return;
+    }
+    if (!appointmentTime.value) {
+        ElMessage({
+            message: "请选择就诊时间",
+            type: 'error'
+        });
+        return;
+    }
+    const result = await $api.appointment.makeAppointment(
+        selectPatient.value, appointmentTime.value, doctorID
+    );
+    if (result.result === "1") {
+        ElMessage({
+            message: "预约成功",
+            type: 'success'
+        });
+        setTimeout(()=>{
+            router.push('/my-appointment');
+        }, 1000);
+    } else {
+        ElMessage({
+            message: "预约失败",
+            type: 'error'
+        });
+    }
+}
+
+onMounted(()=>{
+    getDoctorInfo();
+    getPatients();
+    getVacancyDetail();
+});
+
+// 页头及取消按钮的返回操作
+function goBack() {
+    router.back();
+}
 </script>
 
 <style scoped>
@@ -135,6 +234,15 @@ onMounted(async ()=>{
     width: 60%;
     margin: 0 auto;
     padding-top: 40px;
+}
+
+.header-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.card {
+    margin-top: 40px;
 }
 
 .introduction {

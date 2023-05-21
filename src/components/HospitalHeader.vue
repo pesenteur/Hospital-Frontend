@@ -9,7 +9,7 @@
         >
             <router-link to="/" id="logo">医院门诊预约系统</router-link>
             <el-menu-item index="/">医院首页</el-menu-item>
-            <el-menu-item index="/introduce">医院概况</el-menu-item>
+            <el-menu-item index="/introduce">新闻通知</el-menu-item>
             <el-sub-menu index="patient"
                          popper-class="popper-own"
                          :teleported="false"
