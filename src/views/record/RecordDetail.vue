@@ -2,110 +2,147 @@
     <div>
         <div class="date-choose">
             <el-date-picker
-                    v-model="date"
+                    v-model="dateRange"
                     type="daterange"
                     range-separator="到"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
                     size="large"
                     :shortcuts="shortcuts"
+                    clearable
             />
         </div>
-        <div class="record">
-            <el-descriptions
+        <div class="record" v-if="displayRecords.length">
+            <el-space fill wrap :size="30">
+                <el-descriptions
                     :column="3"
                     size="large"
                     border
-            >
-                <el-descriptions-item>
-                    <template #label>
-                        姓名
-                    </template>
-                    <div class="info">
-                        患者一
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template #label>
-                        性别
-                    </template>
-                    <div class="info">
-                        男
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template #label>
-                        年龄
-                    </template>
-                    <div class="info">
-                        18
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template #label>
-                        就诊日期
-                    </template>
-                    <div class="info">
-                        2023年04月05日
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template #label>
-                        就诊科室
-                    </template>
-                    <div class="info">
-                        全科
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item>
-                    <template #label>
-                        主治医师
-                    </template>
-                    <div class="info">
-                        医生一
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item :span="3">
-                    <template #label>
-                        症状
-                    </template>
-                    <div class="info">
-                        症状一<br/>症状二<br/>症状三
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item :span="3">
-                    <template #label>
-                        诊断结果
-                    </template>
-                    <div class="info">
-                        结果一<br/>结果二<br/>结果三
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item :span="3">
-                    <template #label>
-                        处方
-                    </template>
-                    <div class="info">
-                        处方一<br/>处方二<br/>处方三
-                    </div>
-                </el-descriptions-item>
-                <el-descriptions-item :span="3">
-                    <template #label>
-                        医嘱
-                    </template>
-                    <div class="info">
-                        医嘱一<br/>医嘱二<br/>医嘱三
-                    </div>
-                </el-descriptions-item>
-            </el-descriptions>
+                    v-for="record in displayRecords"
+                    :key="record.medical_record_id"
+                >
+                    <el-descriptions-item>
+                        <template #label>
+                            姓名
+                        </template>
+                        <div class="info">
+                            {{ record.name }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template #label>
+                            性别
+                        </template>
+                        <div class="info">
+                            {{ record.gender }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template #label>
+                            年龄
+                        </template>
+                        <div class="info">
+                            {{ record.age }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template #label>
+                            就诊日期
+                        </template>
+                        <div class="info">
+                            {{ record.medical_record_date }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template #label>
+                            就诊科室
+                        </template>
+                        <div class="info">
+                            {{ record.department_name }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item>
+                        <template #label>
+                            主治医师
+                        </template>
+                        <div class="info">
+                            {{ record.doctor_name }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="3">
+                        <template #label>
+                            症状
+                        </template>
+                        <div class="info">
+                            {{ record.symptom }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="3">
+                        <template #label>
+                            诊断结果
+                        </template>
+                        <div class="info">
+                            {{ record.result }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="3">
+                        <template #label>
+                            处方
+                        </template>
+                        <div class="info">
+                            {{ record.prescription }}
+                        </div>
+                    </el-descriptions-item>
+                    <el-descriptions-item :span="3">
+                        <template #label>
+                            医嘱
+                        </template>
+                        <div class="info">
+                            {{ record.advice }}
+                        </div>
+                    </el-descriptions-item>
+                </el-descriptions>
+            </el-space>
         </div>
+        <el-empty v-else/>
     </div>
 </template>
 
 <script setup>
-import {ref, reactive} from "vue";
+import {ref, reactive, watch, computed, watchEffect} from "vue";
 
-const date = ref();
+const props = defineProps({
+    data: {
+        default(rawProps) {
+            return [];
+        }
+    }
+});
+
+// 存储病历信息
+const records = computed(()=>props.data);
+// 筛选条件——开始日期及结束日期
+const dateRange = ref();
+// 展示指定时间段的病历信息
+const displayRecords = ref([]);
+
+// 获取要展示的病历信息
+// 监视筛选条件——开始日期及结束日期，改变要展示的病历信息
+watchEffect(()=>{
+    if (!dateRange.value) {
+        displayRecords.value = records.value;
+    } else {
+        displayRecords.value = records.value.filter(
+            item=> {
+                const date = new Date(item.medical_record_date);
+                date.setHours(0);
+                return date >= dateRange.value[0] && date <= dateRange.value[1];
+            }
+        );
+    }
+})
+
+// 常用日期范围选择
 const shortcuts = reactive([{
     text: '近一周',
     value: () => {
@@ -152,5 +189,9 @@ const shortcuts = reactive([{
 <style scoped>
 .record {
     padding: 20px 0;
+}
+
+.info {
+    white-space: pre-wrap;
 }
 </style>

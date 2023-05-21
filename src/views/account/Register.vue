@@ -247,7 +247,6 @@ async function register() {
                 });
                 setTimeout(()=>router.push('/login'), 2000);
             } catch (error) {
-                console.log(error)
                 ElMessage({
                     message: error,
                     type: 'error'

@@ -14,8 +14,10 @@
             </el-input>
         </div>
         <div class="doctors">
-            <doctor-card v-for="doctor in doctorList" :key="doctor.id"
-                         :data="doctor"
+            <doctor-card
+                v-for="doctor in doctorList"
+                :key="doctor.id"
+                :data="doctor"
             />
         </div>
         <el-empty
@@ -43,7 +45,7 @@ const doctorList = ref([]);
 // 获取医生数据
 async function getDoctorList() {
     let result = await $api.doctor.requestDoctorList(keyWord.value);
-    if (result.result === 1) {
+    if (result.result === "1") {
         doctorList.value = result.data;
     } else {
         ElMessage({
@@ -87,8 +89,8 @@ onBeforeRouteUpdate(async (to, from)=>{
 }
 .doctors {
     display: flex;
-    justify-content: space-between;
     flex-wrap: wrap;
+    justify-content: flex-start;
     margin-top: 60px;
 }
 </style>

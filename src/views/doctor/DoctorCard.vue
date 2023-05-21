@@ -34,7 +34,7 @@ const props = defineProps(['data']);
 .card {
     width: 330px;
     height: 280px;
-    margin: 20px 0;
+    margin: 20px 40px 20px 0;
 }
 
 .first {

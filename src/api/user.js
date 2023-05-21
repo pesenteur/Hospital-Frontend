@@ -1,42 +1,42 @@
 import requests from "@/utils/request";
 
 export default {
-    loginWithCode(phone_number, code){
-        return requests({
-            url: '/loginWithCode',
-            method: 'POST',
-            data: {
-                phone_number, code
-            }
-        });
-    },
-    loginWithPassword(phone_number, password){
-        return requests({
-            url: '/loginWithPassword',
-            method: 'POST',
-            data: {
-                phone_number, password
-            }
-        });
-    },
-    register(phone_number, verification_code, password){
-        return requests({
-            url: '/register',
-            method: 'POST',
-            data: {
-                phone_number, verification_code, password
-            }
-        });
-    },
-    requestCode(phone_number) {
-        return requests({
-            url: `/sendCode/${phone_number}`,
-            method: 'GET'
-        });
-    },
     requestPatients() {
         return requests({
             url: '/patientList',
+            method: 'GET'
+        });
+    },
+    updatePatient(patient_id, patient_name, patient_gender, patient_identification, phone_number, address) {
+        return requests({
+            url: `/updatePatient/${patient_id}`,
+            method: 'PUT',
+            data: {
+                patient_name, patient_gender, patient_identification, phone_number, address
+            }
+        });
+    },
+    addPatient(patient_name, identification, phone_number, address) {
+        return requests({
+            url: 'addPatient',
+            method: 'POST',
+            data: {
+                patient_name, identification, phone_number, address
+            }
+        });
+    },
+    deletePatient(patient_ids) {
+        return requests({
+            url: `/deletePatient`,
+            method: 'DELETE',
+            data: {
+                patient_ids
+            }
+        });
+    },
+    requestsRecord(patient_id) {
+        return requests({
+            url: `/getMedicalRecord/${patient_id}`,
             method: 'GET'
         });
     }

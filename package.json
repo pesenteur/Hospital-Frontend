@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@vueuse/components": "^10.1.2",
+    "@vueuse/core": "^10.1.2",
     "axios": "^1.4.0",
     "element-plus": "^2.3.3",
+    "id-validator": "^1.3.0",
     "mockjs": "^1.1.0",
     "pinia": "^2.0.32",
     "unplugin-icons": "^0.16.1",

@@ -23,6 +23,30 @@ export default {
             params:{
                 doctor_id, date, is_morning
             }
-        })
+        });
+    },
+    makeAppointment(patient_id, start_time, doctor_id) {
+        return requests({
+            url: '/makeAppointment',
+            method: 'POST',
+            data: {
+                patient_id, start_time, doctor_id
+            }
+        });
+    },
+    requestAppointmentList(patient_id) {
+        return requests({
+            url: `/patientAppointment/${patient_id}`,
+            method: 'GET'
+        });
+    },
+    cancelAppointment(appointment_id) {
+        return requests({
+            url: '/cancelAppointment',
+            method: 'POST',
+            data: {
+                appointment_id
+            }
+        });
     }
 }

@@ -1,110 +1,15 @@
 <template>
     <div class="main">
         <el-table
-                ref="multipleTableRef"
-                :data="tableData"
+            ref="multipleTableRef"
+            :data="patients"
+            @selection-change="handleSelectionChange"
         >
             <el-table-column type="selection" width="30"/>
             <el-table-column type="expand" width="30">
-                <template #default="props">
+                <template #default="{row}">
                     <div class="more">
-                        <el-descriptions
-                                :column="2"
-                                size="large"
-                                border
-                        >
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <User/>
-                                        </el-icon>
-                                        姓名
-                                    </div>
-                                </template>
-                                <div class="info">
-                                    {{ props.row.name }}
-                                    <el-icon class="edit">
-                                        <Edit/>
-                                    </el-icon>
-                                </div>
-                            </el-descriptions-item>
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <Male/>
-                                        </el-icon>
-                                        性别
-                                    </div>
-                                </template>
-                                <div class="info">
-                                    {{ props.row.sex }}
-                                    <el-icon class="edit">
-                                        <Edit/>
-                                    </el-icon>
-                                </div>
-                            </el-descriptions-item>
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <iphone/>
-                                        </el-icon>
-                                        身份证号
-                                    </div>
-                                </template>
-                                <div class="info">
-                                    {{ props.row.identification }}
-                                    <el-icon class="edit">
-                                        <Edit/>
-                                    </el-icon>
-                                </div>
-                            </el-descriptions-item>
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <iphone/>
-                                        </el-icon>
-                                        手机号
-                                    </div>
-                                </template>
-                                <div class="info">
-                                    {{ props.row.phone }}
-                                    <el-icon class="edit">
-                                        <Edit/>
-                                    </el-icon>
-                                </div>
-                            </el-descriptions-item>
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <WarningFilled/>
-                                        </el-icon>
-                                        失约次数
-                                    </div>
-                                </template>
-                                {{ props.row.absence }}
-                            </el-descriptions-item>
-                            <el-descriptions-item>
-                                <template #label>
-                                    <div class="cell-item">
-                                        <el-icon class="icon">
-                                            <office-building/>
-                                        </el-icon>
-                                        住址
-                                    </div>
-                                </template>
-                                <div class="info">
-                                    <div>{{ props.row.address }}</div>
-                                    <el-icon class="edit">
-                                        <Edit/>
-                                    </el-icon>
-                                </div>
-                            </el-descriptions-item>
-                        </el-descriptions>
+                        <patient-detail :data="row" @update-patient="updatePatientInfo"/>
                     </div>
                 </template>
             </el-table-column>
@@ -112,39 +17,117 @@
             <el-table-column property="identification" label="身份证号"/>
             <el-table-column align="right">
                 <template #header>
-                    <el-button type="primary">添加就诊者</el-button>
-                    <el-button type="danger">删除所选</el-button>
+                    <el-button type="primary" @click="display=true">添加就诊者</el-button>
+                    <el-button type="danger" @click="removeSelect">删除所选</el-button>
                 </template>
-                <template #default="scope">
-                    <el-button type="danger" :icon="Delete" circle/>
+                <template #default="{row}">
+                    <el-button type="danger" :icon="Delete" circle @click="removePatient(row)"/>
                 </template>
             </el-table-column>
         </el-table>
-        <add-patient :display="true"/>
+        <add-patient v-model="display" @add-patient="addNewPatient"/>
     </div>
 </template>
 
 <script setup>
-import {ref} from "vue";
-import {Delete, Edit, Iphone, Male, OfficeBuilding, User, UserFilled, WarningFilled} from "@element-plus/icons-vue";
+import {inject, onMounted, ref} from "vue";
+import {Delete} from "@element-plus/icons-vue";
 import AddPatient from "@/views/user/AddPatient.vue";
+import PatientDetail from "@/views/user/PatientDetail.vue";
+import {ElMessage} from "element-plus";
 
-const multipleTableRef = ref();
-const tableData = ref([{
-    name: '患者一',
-    identification: '130100200011084321',
-    sex: '男',
-    phone: '1234567890',
-    address: '北京市海淀区学院路37号北京航空航天大学',
-    absence: 0
-}, {
-    name: '患者二',
-    identification: '130100200011084321',
-    sex: '男',
-    phone: '1234567890',
-    address: null,
-    absence: 0
-}]);
+const $api = inject('$api');
+
+// 存储就诊者
+const patients = ref([]);
+// 发送请求获取就诊者信息
+async function getPatients() {
+    const result = await $api.user.requestPatients();
+    if (result.result === "1") {
+        patients.value = result.data;
+    } else {
+        ElMessage({
+            message: "获取就诊人数据失败，请刷新页面",
+            type: 'error'
+        });
+    }
+}
+
+// 发送请求更改就诊人信息
+async function updatePatientInfo(data) {
+    const result = await $api.user.updatePatient(
+        data.id, data.name, data.gender, data.identification,
+        data.phone, data.address
+    );
+    if (result.result === '1') {
+        ElMessage({
+            message: '更新信息成功',
+            type: 'success'
+        });
+        await getPatients();
+    } else {
+        ElMessage({
+            message: '更新信息失败，请重试',
+            type: 'error'
+        });
+    }
+}
+
+// 是否显示添加就诊者弹窗
+const display = ref(false);
+// 发送请求添加就诊者
+async function addNewPatient(info) {
+    const result = await $api.user.addPatient(
+        info.name, info.identification, info.phone, info.address
+    );
+    if (result.result === '1') {
+        ElMessage({
+            message: '添加成功',
+            type: 'success'
+        });
+        await getPatients();
+    } else {
+        ElMessage({
+            message: '添加失败，请重试',
+            type: 'error'
+        });
+    }
+}
+
+// 存储选中的数据
+const selectedPatients = ref([]);
+// 选中状态切换时维护selectedPatients
+function handleSelectionChange(value){
+    selectedPatients.value = value;
+}
+
+// 删除所选
+async function removeSelect() {
+    await removePatients(selectedPatients.value.map(item=>item.id));
+}
+async function removePatient(patient) {
+    await removePatients([patient.id]);
+}
+
+async function removePatients(patients) {
+    const result = await $api.user.deletePatient(patients);
+    if (result.result === '1') {
+        ElMessage({
+            message: '删除成功',
+            type: 'success'
+        });
+        await getPatients();
+    } else {
+        ElMessage({
+            message: '删除失败，请重试',
+            type: 'error'
+        });
+    }
+}
+
+onMounted(()=>{
+    getPatients();
+});
 </script>
 
 <style scoped>
@@ -156,24 +139,5 @@ const tableData = ref([{
 
 .more {
     margin-left: 60px;
-}
-
-.cell-item {
-    display: flex;
-    align-items: center;
-}
-
-.icon {
-    margin-right: 8px;;
-}
-
-.info {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.edit:hover {
-    cursor: pointer;
 }
 </style>

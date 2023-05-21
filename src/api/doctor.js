@@ -10,9 +10,9 @@ export default {
             }
         });
     },
-    requestDoctorDetail() {
+    requestDoctorDetail(doctorID) {
         return requests({
-            url: '/doctorDetail',
+            url: `/doctorDetail/${doctorID}`,
             method: 'GET'
         });
     },
