@@ -1,12 +1,14 @@
-import home from "./home"
-import doctor from "./doctor"
-import appointment from "./appointment";
-import user from "./user"
+import home from "@/api/home"
+import doctor from "@/api/doctor"
+import appointment from "@/api/appointment";
+import user from "@/api/user"
+import diagnose from "@/api/diagnose";
+import leave from "@/api/leave";
 
 const api = {
     install(app) {
         app.provide('$api', {
-            home, doctor, appointment, user
+            home, doctor, appointment, user, diagnose, leave
         });
     }
 };

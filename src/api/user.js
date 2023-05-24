@@ -7,6 +7,12 @@ export default {
             method: 'GET'
         });
     },
+    requestPatientDetail(patient_id) {
+        return requests({
+            url: `/patientDetail/${patient_id}`,
+            method: 'GET'
+        });
+    },
     updatePatient(patient_id, patient_name, patient_gender, patient_identification, phone_number, address) {
         return requests({
             url: `/updatePatient/${patient_id}`,

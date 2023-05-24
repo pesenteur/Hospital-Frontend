@@ -24,7 +24,7 @@
             <el-table
                 :data="appointmentList"
             >
-                <el-table-column property="appointment_time" label="日期"/>
+                <el-table-column property="appointment_time" label="预约时间"/>
                 <el-table-column label="就诊人">{{ selectPatientName }}</el-table-column>
                 <el-table-column property="department_name" label="科室"/>
                 <el-table-column property="doctor_name" label="预约医生"/>
@@ -34,7 +34,7 @@
                         <el-button
                             type="danger"
                             size="small"
-                            v-if="row.appointment_status === 'Scheduled'"
+                            v-if="row.appointment_status === '待就医'"
                             @click="cancelAppointment(row.appointment_id)"
                         >
                             取消预约

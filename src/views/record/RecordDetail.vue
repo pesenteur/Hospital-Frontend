@@ -195,3 +195,9 @@ const shortcuts = reactive([{
     white-space: pre-wrap;
 }
 </style>
+
+<style>
+.el-space {
+    width: 100%;
+}
+</style>
