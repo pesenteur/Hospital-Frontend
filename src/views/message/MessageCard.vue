@@ -1,23 +1,63 @@
 <template>
-    <el-card shadow="hover">
+    <el-card shadow="hover" v-intersection-observer="onIntersectionObserver">
         <template #header>
             <div class="title">
-                <el-tag type="danger" class="status">未读</el-tag>
-                <div class="title-content">预约挂号成功提醒</div>
+                <el-tag type="success" class="status" v-if="data.is_read">
+                    已读
+                </el-tag>
+                <el-tag type="danger" class="status" v-else>
+                    未读
+                </el-tag>
+                <div class="title-content">{{ data.title }}</div>
             </div>
         </template>
         <div class="content">
-            您已预约成功，预约详情如下：<br/>
-            就诊人：患者一<br/>
-            时间：2023年4月28日<br/>
-            预约医生：医生一<br/>
-            请及时前往医院就诊，感谢您的配合。
+            {{ data.content }}
         </div>
     </el-card>
 </template>
 
 <script setup>
+import { vIntersectionObserver } from '@vueuse/components'
+import {computed, inject} from "vue";
 
+const $api = inject('$api');
+const props = defineProps({
+    modelValue: {
+        required: true,
+        type: Object
+    }
+});
+const emit = defineEmits(['update:modelValue']);
+
+// v-model的实现
+const data = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emit('update:modelValue', value);
+    }
+});
+
+let timer;
+function onIntersectionObserver([{ isIntersecting }]) {
+    if (isIntersecting && !data.value.is_read) {
+        timer = setTimeout(()=>{
+            setRead();
+        }, 3000);
+    } else if (!isIntersecting && !data.value.is_read) {
+        clearTimeout(timer);
+    }
+}
+
+// 发请求设为已读
+async function setRead() {
+    const result = await $api.user.readMessage(data.value.id);
+    if (result.result === '1') {
+        data.value.is_read = 1;
+    }
+}
 </script>
 
 <style scoped>
@@ -32,5 +72,6 @@
 
 .content {
     line-height: 30px;
+    white-space: pre-wrap;
 }
 </style>

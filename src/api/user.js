@@ -45,5 +45,17 @@ export default {
             url: `/getMedicalRecord/${patient_id}`,
             method: 'GET'
         });
+    },
+    requestsMessages() {
+        return requests({
+            url: '/getMessage',
+            method: 'GET'
+        });
+    },
+    readMessage(message_id) {
+        return requests({
+            url: `/readMessage/${message_id}`,
+            method: 'GET'
+        });
     }
 }
