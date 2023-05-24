@@ -1,22 +1,23 @@
 <template>
     <div class="main">
         <div class="option">
-            <el-button type="primary">请假申请</el-button>
+            <el-button type="primary" @click="display=true">请假申请</el-button>
         </div>
         <div class="leaves">
             <el-table
-                    :data="tableData"
+                :data="leaveList"
             >
-                <el-table-column property="start" label="开始时间"/>
-                <el-table-column property="end" label="结束时间"/>
+                <el-table-column property="start_time" label="开始时间"/>
+                <el-table-column property="end_time" label="结束时间"/>
                 <el-table-column property="type" label="类型"/>
                 <el-table-column property="reason" label="请假理由" show-overflow-tooltip/>
-                <el-table-column property="status" label="状态"/>
+                <el-table-column property="leave_status" label="状态"/>
                 <el-table-column label="Operations">
-                    <template #default="scope">
+                    <template #default="{row}">
                         <el-button
                             size="small"
                             type="danger"
+                            @click="cancelLeave(row.leave_id)"
                         >
                             撤销请假
                         </el-button>
@@ -24,32 +25,77 @@
                 </el-table-column>
             </el-table>
         </div>
-        <request-leave display="true"/>
+        <request-leave v-model="display" @request-leave="makeLeave"/>
     </div>
 </template>
 
 <script setup>
 import RequestLeave from "@/views/leave/RequestLeave.vue";
+import {inject, onMounted, ref} from "vue";
+import {ElMessage} from "element-plus";
 
-const tableData = [{
-    start: '2023-04-12 08:00',
-    end: '2023-04-12 12:00',
-    type: '事假',
-    reason: '具体原因',
-    status: '申请中'
-}, {
-    start: '2023-04-10 08:00',
-    end: '2023-04-10 12:00',
-    type: '病假',
-    reason: '具体原因',
-    status: '已通过'
-}, {
-    start: '2023-04-01 08:00',
-    end: '2023-04-01 12:00',
-    type: '事假',
-    reason: '具体原因',
-    status: '已结束'
-}]
+const $api = inject('$api');
+
+// 存储请假信息
+const leaveList = ref([]);
+// 获取请假信息
+async function getLeaveList() {
+    const result = await $api.leave.requestLeaveList();
+    if (result.result === '1') {
+        leaveList.value = result.data;
+    } else {
+        ElMessage({
+            message: '获取请假信息失败，请刷新重试',
+            type: 'error'
+        });
+    }
+}
+
+// 新增请假申请
+// 控制请假申请弹窗的显示
+const display = ref(false);
+// 发请求请假
+async function makeLeave(data) {
+    const result = await $api.leave.makeLeave(
+        data.dateRange[0],
+        data.dateRange[1],
+        data.type,
+        data.reason
+    );
+    if (result.result === '1') {
+        ElMessage({
+            message: '操作成功',
+            type: 'success'
+        });
+        await getLeaveList();
+    } else {
+        ElMessage({
+            message: '操作失败，请重试',
+            type: 'error'
+        });
+    }
+}
+
+// 发请求取消请假
+async function cancelLeave(leaveID) {
+    const result = await $api.leave.cancelLeave(leaveID);
+    if (result.result === '1') {
+        ElMessage({
+            message: '操作成功',
+            type: 'success'
+        });
+        await getLeaveList();
+    } else {
+        ElMessage({
+            message: '操作失败，请重试',
+            type: 'error'
+        });
+    }
+}
+
+onMounted(()=>{
+    getLeaveList();
+});
 </script>
 
 <style scoped>

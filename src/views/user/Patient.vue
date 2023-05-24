@@ -9,7 +9,7 @@
             <el-table-column type="expand" width="30">
                 <template #default="{row}">
                     <div class="more">
-                        <patient-detail :data="row" @update-patient="updatePatientInfo"/>
+                        <patient-detail :data="row" editable @update-patient="updatePatientInfo"/>
                     </div>
                 </template>
             </el-table-column>

@@ -15,7 +15,7 @@
             </template>
             <div class="info" v-if="!isEditing('name')">
                 <div>{{ data.name }}</div>
-                <el-icon class="operation" @click="editInfo('name')">
+                <el-icon class="operation" v-show="editable" @click="editInfo('name')">
                     <Edit/>
                 </el-icon>
             </div>
@@ -42,7 +42,7 @@
             </template>
             <div class="info" v-if="!isEditing('gender')">
                 <div>{{ data.gender }}</div>
-                <el-icon class="operation" @click="editInfo('gender')">
+                <el-icon class="operation" v-show="editable" @click="editInfo('gender')">
                     <Edit/>
                 </el-icon>
             </div>
@@ -69,7 +69,7 @@
             </template>
             <div class="info" v-if="!isEditing('identification')">
                 <div>{{ data.identification }}</div>
-                <el-icon class="operation" @click="editInfo('identification')">
+                <el-icon class="operation" v-show="editable" @click="editInfo('identification')">
                     <Edit/>
                 </el-icon>
             </div>
@@ -96,7 +96,7 @@
             </template>
             <div class="info" v-if="!isEditing('phone')">
                 <div>{{ data.phone }}</div>
-                <el-icon class="operation" @click="editInfo('phone')">
+                <el-icon class="operation" v-show="editable" @click="editInfo('phone')">
                     <Edit/>
                 </el-icon>
             </div>
@@ -134,7 +134,7 @@
             </template>
             <div class="info" v-if="!isEditing('address')">
                 <div>{{ data.address }}</div>
-                <el-icon class="operation" @click="editInfo('address')">
+                <el-icon class="operation" v-show="editable" @click="editInfo('address')">
                     <Edit/>
                 </el-icon>
             </div>
@@ -166,7 +166,18 @@ import {
 } from "@element-plus/icons-vue";
 import {inject, reactive, ref} from "vue";
 
-const props = defineProps(['data']);
+const props = defineProps({
+    data: {
+        required: true,
+        type: Object
+    },
+    editable: {
+        type: Boolean,
+        default(rawProps) {
+            return false;
+        }
+    },
+});
 const emit = defineEmits(['updatePatient']);
 // 临时存储编辑时的数据，编辑时从data复制
 const editBuf = ref();
