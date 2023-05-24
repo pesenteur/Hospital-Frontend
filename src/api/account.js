@@ -33,5 +33,17 @@ export default {
             url: `/sendCode/${phone_number}`,
             method: 'GET'
         });
+    },
+    requestUserInfo() {
+        return requests({
+            url: '/userInfo',
+            method: 'GET'
+        });
+    },
+    requestUnread() {
+        return requests({
+            url: '/unreadMessage',
+            method: 'GET'
+        });
     }
 }

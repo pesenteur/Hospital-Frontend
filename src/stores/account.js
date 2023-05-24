@@ -6,7 +6,8 @@ const state = ()=>{
     return {
         code: '',
         token: getToken(),
-        userInfo: {}
+        userInfo: {},
+        unreadMessage: false
     }
 }
 
@@ -44,10 +45,24 @@ const actions = {
         }
         return Promise.reject(result.message);
     },
-    Handle401() {
+    logout() {
         this.token = undefined;
         this.userInfo = {};
         clearToken();
+    },
+    async getUserInfo() {
+        let result = await accountAPI.requestUserInfo();
+        if (result.result === '1') {
+            this.userInfo = result.data;
+        } else {
+            return Promise.reject(result.message);
+        }
+        result = accountAPI.requestUnread();
+        if (result.result === '1') {
+            this.unreadMessage = result.result * 1;
+        } else {
+            return Promise.reject(result.message);
+        }
     }
 }
 
