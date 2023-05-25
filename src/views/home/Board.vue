@@ -22,9 +22,9 @@ const props = defineProps(['title', 'data']);
 
 </script>
 
-<style>
+<style scoped>
 .box-card {
-    width: 450px;
+    width: 45%;
 }
 
 .right {
