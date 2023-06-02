@@ -38,7 +38,3 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo "login" > log.txt
-            sudo docker rm hospital -f
-            sudo docker rmi ${{ secrets.DOCKER_REPOSITORY }}
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
-            sudo docker run -d -p 80:80 --name hospital ${{ secrets.DOCKER_REPOSITORY }}
