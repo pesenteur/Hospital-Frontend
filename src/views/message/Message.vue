@@ -26,7 +26,7 @@ async function getMessages() {
         messages.value = result.messages;
     } else {
         ElMessage({
-            message: '获取消息失败，请刷新重试',
+            message: result.message || '获取消息失败，请刷新重试',
             type: 'error'
         });
     }

@@ -29,10 +29,10 @@
         </div>
         <div class="vacancy">
             <Vacancy
-                    v-for="vacancy in vacancyList"
-                    :key="vacancy.id"
-                    :data="vacancy"
-                    class="item"
+                v-for="vacancy in vacancyList"
+                :key="vacancy.id"
+                :data="vacancy"
+                class="item"
             />
         </div>
         <el-empty description="请选择科室及就诊时间" v-if="!$route.query.department"/>
@@ -65,7 +65,7 @@ async function getDepartmentList() {
         departmentList.value = result.data;
     } else {
         ElMessage({
-            message: "获取部门数据失败，请刷新页面",
+            message: result.message || "获取部门数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -103,7 +103,7 @@ async function getVacancyList() {
         vacancyList.value = result.data;
     } else {
         ElMessage({
-            message: "获取放号数据失败，请刷新页面",
+            message: result.message || "获取放号数据失败，请刷新页面",
             type: 'error'
         });
     }

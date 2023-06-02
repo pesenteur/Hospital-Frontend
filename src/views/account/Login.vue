@@ -5,9 +5,9 @@
             <el-image :src="accountImage" class="image"/>
             <div>
                 <el-tabs
-                        type="border-card"
-                        :stretch="true"
-                        class="panel"
+                    type="border-card"
+                    :stretch="true"
+                    class="panel"
                 >
                     <el-tab-pane label="验证码登录">
                         <el-input

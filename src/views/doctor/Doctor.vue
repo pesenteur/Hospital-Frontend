@@ -49,7 +49,7 @@ async function getDoctorList() {
         doctorList.value = result.data;
     } else {
         ElMessage({
-            message: "获取医生数据失败，请刷新页面",
+            message: result.message || "获取医生数据失败，请刷新页面",
             type: 'error'
         })
     }
@@ -67,12 +67,12 @@ function search(){
     });
 }
 
-onBeforeRouteUpdate(async (to, from)=>{
+onBeforeRouteUpdate((to, from)=>{
     // 如果跳转到/doctor，说明在进行搜素，需要发送请求。
     if (to.path === '/doctor') {
         // 通过导航栏跳转到/doctor时，keyWord应清空。
         keyWord.value = to.query.keyWord;
-        await getDoctorList();
+        getDoctorList();
     }
 });
 </script>
@@ -91,7 +91,8 @@ onBeforeRouteUpdate(async (to, from)=>{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-top: 60px;
+    margin: 60px auto 0;
+    width: 1120px;
 }
 </style>
 

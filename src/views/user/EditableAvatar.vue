@@ -59,7 +59,6 @@ const showDialog = () => {
     selected.value = false;
 };
 const setImage = uploadFile => {
-    console.log('in')
     const reader = new FileReader();
     reader.onload = event => {
         cropper.value && cropper.value.replace(event.target.result);
@@ -98,7 +97,7 @@ const saveAvatar = async () => {
         }
     } catch (error) {
         ElMessage({
-            message: '遇到问题，请稍后重试',
+            message: '遇到问题，请刷新',
             type: 'error'
         });
     }

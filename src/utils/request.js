@@ -20,7 +20,9 @@ requests.interceptors.request.use(config=>{
 });
 
 // 3. 响应拦截器
-requests.interceptors.response.use(response=>response.data, error => {
+requests.interceptors.response.use(response=> {
+    return response.data
+}, error => {
     if (error.response.status === 401) {
         const accountStore = useAccountStore();
         accountStore.logout();
@@ -29,16 +31,16 @@ requests.interceptors.response.use(response=>response.data, error => {
             query: {
                 'redirect': router.currentRoute.value.fullPath
             }
-        }).then();
+        }).then(()=>{});
         ElMessage({
             message: 'token失效，请重新登录',
             type: 'error'
         });
-    } else {
-        ElMessage({
-            message: '请检查网络连接',
-            type: 'error'
-        });
+    } else if (!error.response.data.result) {
+        error.response.data = {
+            result: '0',
+            message: '未知错误，请稍后重试'
+        };
     }
     return error.response.data;
 });

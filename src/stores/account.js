@@ -19,7 +19,7 @@ const actions = {
             setToken(result.data.token);
             return "登录成功";
         }
-        return Promise.reject(result.reason);
+        return Promise.reject(result.message);
     },
     async loginWithPassword(phone_number, password) {
         const result = await accountAPI.loginWithPassword(phone_number, password);
@@ -28,14 +28,14 @@ const actions = {
             setToken(result.data.token);
             return "登录成功";
         }
-        return Promise.reject(result.reason);
+        return Promise.reject(result.message);
     },
     async register(phone_number, verification_code, password) {
         const result = await accountAPI.register(phone_number, verification_code, password);
         if (result.result === '1') {
             return "注册成功";
         }
-        return Promise.reject(result.reason);
+        return Promise.reject(result.message);
     },
     async getCode(phone_number) {
         const result = await accountAPI.requestCode(phone_number);
@@ -57,9 +57,28 @@ const actions = {
         } else {
             return Promise.reject(result.message);
         }
-        result = accountAPI.requestUnread();
+        result = await accountAPI.requestUnread();
         if (result.result === '1') {
-            this.unreadMessage = result.result * 1;
+            this.unreadMessage = result.unread;
+        } else {
+            return Promise.reject(result.message);
+        }
+    },
+    async updatePassword(old_password, new_password) {
+        const result = await accountAPI.updatePassword(old_password, new_password);
+        if (result.result === '1') {
+            return '修改成功'
+        } else {
+            return Promise.reject(result.message);
+        }
+    },
+    async updatePhone(new_phone_number, vertification_code) {
+        const result = await accountAPI.updatePhone(new_phone_number, vertification_code);
+        if (result.result === '1') {
+            this.token = result.token;
+            clearToken();
+            setToken(result.token);
+            return '修改成功'
         } else {
             return Promise.reject(result.message);
         }

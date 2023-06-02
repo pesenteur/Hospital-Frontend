@@ -47,7 +47,7 @@ async function getPatients() {
         patients.value = result.data;
     } else {
         ElMessage({
-            message: "获取就诊人数据失败，请刷新页面",
+            message: result.message || "获取就诊人数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -67,7 +67,7 @@ async function updatePatientInfo(data) {
         await getPatients();
     } else {
         ElMessage({
-            message: '更新信息失败，请重试',
+            message: result.message || '更新信息失败，请重试',
             type: 'error'
         });
     }
@@ -88,7 +88,7 @@ async function addNewPatient(info) {
         await getPatients();
     } else {
         ElMessage({
-            message: '添加失败，请重试',
+            message: result.message || '添加失败，请重试',
             type: 'error'
         });
     }
