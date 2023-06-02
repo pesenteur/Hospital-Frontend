@@ -37,8 +37,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            docker stop hospital
-            docker rm hospital
-            docker rmi ${{ secrets.DOCKER_REPOSITORY }}
-            docker pull ${{ secrets.DOCKER_REPOSITORY }}
-            docker run -d -p 80:80 --name hospital ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker stop hospital
+            sudo docker rm hospital -f
+            sudo docker rmi ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker run -d -p 80:80 --name hospital ${{ secrets.DOCKER_REPOSITORY }}
