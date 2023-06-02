@@ -76,7 +76,7 @@ async function getWaitingPatients() {
         waitingPatients.value = result.appointment_unfinished;
     } else {
         ElMessage({
-            message: '获取患者列表失败，请刷新重试',
+            message: result.message || '获取患者列表失败，请刷新重试',
             type: 'error'
         });
     }
@@ -98,7 +98,7 @@ async function getPatientInfo() {
         patientInfo.value = result.data;
     } else {
         ElMessage({
-            message: "查询患者信息失败，请重试",
+            message: result.message || "查询患者信息失败，请重试",
             type: 'error'
         });
     }
@@ -113,7 +113,7 @@ async function getRecords() {
         records.value = result.data;
     } else {
         ElMessage({
-            message: "查询病历信息失败，请重试",
+            message: result.message || "查询病历信息失败，请重试",
             type: 'error'
         });
     }
@@ -163,7 +163,7 @@ async function updateRecord(info) {
         });
     } else {
         ElMessage({
-            message: isWaiting() ? '创建病历失败，请重试' : '更新病历失败，请重试',
+            message: result.message || isWaiting() ? '创建病历失败，请重试' : '更新病历失败，请重试',
             type: 'error'
         });
     }

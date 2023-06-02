@@ -9,7 +9,16 @@
         >
             <router-link to="/" id="logo">医院门诊预约系统</router-link>
             <el-menu-item index="/">医院首页</el-menu-item>
-            <el-menu-item index="/introduce">新闻通知</el-menu-item>
+            <el-sub-menu
+                index="info"
+                popper-class="popper-own"
+                :teleported="false"
+                :popper-offset="6"
+            >
+                <template #title>新闻通知</template>
+                <el-menu-item index="/notification">通知</el-menu-item>
+                <el-menu-item index="/news">新闻</el-menu-item>
+            </el-sub-menu>
             <el-sub-menu
                 index="patient"
                 popper-class="popper-own"
@@ -44,7 +53,7 @@
                 :popper-offset="12"
                 v-if="isLogin"
             >
-                <template #title><el-avatar/></template>
+                <template #title><el-avatar :src="accountStore.userInfo.avatar"/></template>
                 <el-menu-item index="/userinfo">我的信息</el-menu-item>
                 <el-menu-item index="/patient">管理就诊人</el-menu-item>
                 <el-menu-item index="/my-appointment">我的预约</el-menu-item>
@@ -52,7 +61,6 @@
                 <el-menu-item index="logout" @click="logout">
                     <el-text type="danger">退出登录</el-text>
                 </el-menu-item>
-
             </el-sub-menu>
             <el-link :icon="UserFilled" class="right" v-if="!isLogin">
                 <router-link to="/login">登录</router-link>
@@ -121,5 +129,9 @@ function logout() {
 .el-menu--horizontal .el-menu-item:not(.is-disabled):focus:focus {
     background-color: white;
     color: black;
+}
+.is-dot {
+    top: 3px !important;
+    right: 7px !important;
 }
 </style>

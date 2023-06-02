@@ -48,5 +48,23 @@ export default {
                 appointment_id
             }
         });
+    },
+    requestPayStatus(payment_id) {
+        return requests({
+            url: `/getPaymentStatus/${payment_id}`,
+            method: 'GET'
+        });
+    },
+    requestPay(payment_id) {
+        return requests({
+            url: `/pay/${payment_id}`,
+            method: 'POST'
+        });
+    },
+    requestPayment(appointment_id) {
+        return requests({
+            url: `/paymentList/${appointment_id}`,
+            method: 'get'
+        });
     }
 }

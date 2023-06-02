@@ -45,7 +45,7 @@ async function getLeaveList() {
         leaveList.value = result.data;
     } else {
         ElMessage({
-            message: '获取请假信息失败，请刷新重试',
+            message: result.message || '获取请假信息失败，请刷新重试',
             type: 'error'
         });
     }
@@ -70,7 +70,7 @@ async function makeLeave(data) {
         await getLeaveList();
     } else {
         ElMessage({
-            message: '操作失败，请重试',
+            message: result.message || '操作失败，请重试',
             type: 'error'
         });
     }
@@ -87,7 +87,7 @@ async function cancelLeave(leaveID) {
         await getLeaveList();
     } else {
         ElMessage({
-            message: '操作失败，请重试',
+            message: result.message || '操作失败，请重试',
             type: 'error'
         });
     }

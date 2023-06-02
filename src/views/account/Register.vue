@@ -9,10 +9,10 @@
                         <div class="card-header">注册</div>
                     </template>
                     <el-form
-                            label-width="70px"
-                            ref="ruleFormRef"
-                            :model="ruleForm"
-                            :rules="rules"
+                        label-width="70px"
+                        ref="ruleFormRef"
+                        :model="ruleForm"
+                        :rules="rules"
                     >
                         <el-form-item
                                 label="手机号"

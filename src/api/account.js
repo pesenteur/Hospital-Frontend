@@ -45,5 +45,23 @@ export default {
             url: '/unreadMessage',
             method: 'GET'
         });
+    },
+    updatePassword(old_password, new_password) {
+        return requests({
+            url: '/changePassword',
+            method: 'POST',
+            data: {
+                old_password, new_password
+            }
+        });
+    },
+    updatePhone(new_phone_number, vertification_code) {
+        return requests({
+            url: '/changePhone',
+            method: 'POST',
+            data: {
+                new_phone_number, vertification_code
+            }
+        });
     }
 }

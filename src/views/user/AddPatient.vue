@@ -45,7 +45,7 @@ import IDValidator from "id-validator"
 import {ElMessage} from "element-plus";
 
 const props = defineProps(['modelValue']);
-const emit = defineEmits(['update:modelValue', 'addPatient'])
+const emit = defineEmits(['update:modelValue', 'addPatient']);
 
 // v-model的实现
 const display = computed({

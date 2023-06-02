@@ -30,7 +30,7 @@ async function getCarouselList() {
         carouselList.value = result.data;
     } else {
         ElMessage({
-            message: '获取轮播图信息失败，可刷新重试',
+            message: result.message || '获取轮播图信息失败，可刷新重试',
             type: 'warning'
         });
     }
@@ -45,7 +45,7 @@ async function getNotificationList() {
         notificationList.value = result.data;
     } else {
         ElMessage({
-            message: '获取通知信息失败，可刷新重试',
+            message: result.message || '获取通知信息失败，可刷新重试',
             type: 'warning'
         });
     }
@@ -60,7 +60,7 @@ async function getNewsList() {
         newsList.value = result.data;
     } else {
         ElMessage({
-            message: '获取新闻数据失败，可刷新重试',
+            message: result.message || '获取新闻数据失败，可刷新重试',
             type: 'warning'
         });
     }

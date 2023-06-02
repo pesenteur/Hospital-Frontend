@@ -46,7 +46,7 @@ async function getPatients() {
         patients.value = result.data;
     } else {
         ElMessage({
-            message: "获取就诊人数据失败，请刷新页面",
+            message: result.message || "获取就诊人数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -62,7 +62,7 @@ async function getRecords() {
         records.value = result.data;
     } else {
         ElMessage({
-            message: "查询失败，请重试",
+            message: result.message || "查询失败，请重试",
             type: 'error'
         });
     }

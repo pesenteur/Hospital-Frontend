@@ -34,7 +34,7 @@
                         <el-button
                             type="danger"
                             size="small"
-                            v-if="row.appointment_status === '待就医'"
+                            v-if="canCancel(row)"
                             @click="cancelAppointment(row.appointment_id)"
                         >
                             取消预约
@@ -62,7 +62,7 @@ async function getPatients() {
         patients.value = result.data;
     } else {
         ElMessage({
-            message: "获取就诊人数据失败，请刷新页面",
+            message: result.message || "获取就诊人数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -84,7 +84,7 @@ async function getAppointmentList() {
         appointmentList.value = result.data;
     } else {
         ElMessage({
-            message: "查询失败，请重试",
+            message: result.message || "查询失败，请重试",
             type: 'error'
         });
     }
@@ -94,6 +94,8 @@ const selectPatientName = computed(
     ()=> patients.value.find(value => value.id === selectPatient.value).name
 );
 
+// 是否可以取消预约
+const canCancel = row=>row.appointment_status === '待就医' || row.appointment_status === '待支付';
 // 取消预约
 async function cancelAppointment(appointmentID) {
     const result = await $api.appointment.cancelAppointment(appointmentID);
@@ -105,7 +107,7 @@ async function cancelAppointment(appointmentID) {
         await getAppointmentList();
     } else {
         ElMessage({
-            message: "取消失败，请重试",
+            message: result.message || "取消失败，请重试",
             type: 'error'
         });
     }

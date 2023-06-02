@@ -9,17 +9,23 @@ export default {
         });
     },
     // 请求通知的数据
-    requestNotificationList() {
+    requestNotificationList(offset, count) {
         return requests({
             url: '/notificationList',
-            method: 'GET'
+            method: 'POST',
+            data: {
+                offset, count
+            }
         });
     },
     // 请求新闻的数据
-    requestNewsList() {
+    requestNewsList(offset, count) {
         return requests({
             url: '/newsList',
-            method: 'GET'
+            method: 'POST',
+            data: {
+                offset, count
+            }
         });
     },
 }

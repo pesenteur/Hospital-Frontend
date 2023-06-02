@@ -60,7 +60,7 @@ async function getDetail() {
         detail.value = result.data;
     } else {
         ElMessage({
-            message: '获取医生数据失败，请刷新页面',
+            message: result.message || '获取医生数据失败，请刷新页面',
             type: 'error'
         });
     }

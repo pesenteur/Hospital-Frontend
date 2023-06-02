@@ -85,6 +85,12 @@
             </div>
         </el-card>
     </div>
+    <pay
+        v-model="start_pay"
+        :payment_id="payment_id"
+        @success="afterPay"
+        @cancel="afterPay"
+    />
 </template>
 
 <script setup>
@@ -92,6 +98,7 @@ import {Plus} from "@element-plus/icons-vue";
 import {computed, inject, onMounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import Pay from "@/views/appointment/Pay.vue";
 
 const $api = inject('$api');
 const route = useRoute();
@@ -118,7 +125,7 @@ async function getDoctorInfo() {
         doctorInfo.value = result.data;
     } else {
         ElMessage({
-            message: '获取医生数据失败，请刷新页面',
+            message: result.message || '获取医生数据失败，请刷新页面',
             type: 'error'
         });
     }
@@ -135,7 +142,7 @@ async function getPatients() {
         patients.value = result.data;
     } else {
         ElMessage({
-            message: "获取就诊人数据失败，请刷新页面",
+            message: result.message || "获取就诊人数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -162,7 +169,7 @@ async function getVacancyDetail() {
         vacancyDetail.value = result.data;
     } else {
         ElMessage({
-            message: "获取放号数据失败，请刷新页面",
+            message: result.message || "获取放号数据失败，请刷新页面",
             type: 'error'
         });
     }
@@ -202,19 +209,23 @@ async function makeAppointment() {
         selectPatient.value, appointmentTime.value, doctorID
     );
     if (result.result === "1") {
-        ElMessage({
-            message: "预约成功",
-            type: 'success'
-        });
-        setTimeout(()=>{
-            router.push('/my-appointment');
-        }, 1000);
+        start_pay.value = true;
+        payment_id.value = result.payment_id;
     } else {
         ElMessage({
-            message: "预约失败",
+            message: result.message || "预约失败，请稍后重试",
             type: 'error'
         });
     }
+}
+
+// 支付相关
+// 是否显示支付弹窗
+const start_pay = ref(false);
+const payment_id = ref(1);
+// 支付成功或取消支付后跳转到我的预约界面
+function afterPay() {
+    router.push('/my-appointment');
 }
 
 onMounted(()=>{
@@ -279,7 +290,7 @@ function goBack() {
 }
 
 .available-item {
-    margin: 0 30px 20px 0;
+    margin: 0 25px 20px 0;
 }
 
 .button {
