@@ -77,7 +77,7 @@ const saveAvatar = async () => {
     const formData = new FormData();
     formData.append("avatar", imageFile);
     try {
-        const result = await axios.post("/api/uploadAvatar", formData, {
+        const result = await axios.post("http://azure.pesenteur.eu.org:5555/api/uploadAvatar", formData, {
             headers: {
                 'Content-type' : 'multipart/form-data',
                 Authorization: accountStore.token
