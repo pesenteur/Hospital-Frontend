@@ -20,6 +20,13 @@ jobs:
     # 步骤
     steps:
       - uses: actions/checkout@v2 # git pull
+      - name: 打包镜像, 上传 Docker Hub
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t hospital .
+          docker tag hospital ${{ secrets.DOCKER_REPOSITORY }}
+          docker push ${{ secrets.DOCKER_REPOSITORY }}
+
       - name: 登录服务器, 执行脚本
         uses: appleboy/ssh-action@master
         with:
@@ -27,4 +34,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: whoami
+          script: |
+            sudo docker rm hospital -f
+            sudo docker rmi ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker run -d -p 80:80 --name hospital ${{ secrets.DOCKER_REPOSITORY }}
