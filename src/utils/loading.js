@@ -5,7 +5,7 @@ let loading, timer;
 function start(options) {
     timer = setTimeout(()=> {
         loading = ElLoading.service(options)
-    }, 300);
+    }, 50);
 }
 
 function end() {

@@ -40,6 +40,7 @@ const props = defineProps(['data']);
 .first {
     display: flex;
     justify-content: space-between;
+    width: 100%;
 }
 
 .first>div:first-child {
