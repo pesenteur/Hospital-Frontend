@@ -10,7 +10,6 @@ on:
     branches:
       - main
   workflow_dispatch: # 允许手动运行，便于调试
-
 # 任务
 jobs:
   deploy:
@@ -20,11 +19,12 @@ jobs:
     if: github.repository == 'BUAA-Software-Engineering-2023/Hospital-Frontend'
     # 步骤
     steps:
-      - name: ls -a via ssh
-        uses: garygrossgarten/github-action-ssh@release
+      - uses: actions/checkout@v2 # git pull
+      - name: 登录服务器, 执行脚本
+        uses: appleboy/ssh-action@master
         with:
-          command: whoami
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
-          port: 2022
-          privateKey: ${{ secrets.SSH_KEY}}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: whoami
