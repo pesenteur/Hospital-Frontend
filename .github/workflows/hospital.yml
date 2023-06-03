@@ -36,5 +36,5 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           port: ${{ secrets.SSH_PORT }}
-          script: |
-            echo "login" > log.txt
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: whoami
