@@ -69,7 +69,7 @@ onMounted(()=>{
 <style scoped>
 .banner {
     width: 100%;
-    height: 203px;
+    height: 200px;
     background-image: url("@/assets/banner.jpg");
     background-position: center;
     background-repeat: no-repeat;

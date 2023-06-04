@@ -81,13 +81,6 @@ const searched = ref(false);
 // 发送请求获取预约信息
 async function getAppointmentList() {
     searched.value = true;
-    if (!selectPatient.value) {
-        ElMessage({
-            message: "请先选择就诊人",
-            type: 'error'
-        });
-        return;
-    }
     const result = await $api.appointment.requestAppointmentList(selectPatient.value);
     if (result.result === '1') {
         appointmentList.value = result.data;
@@ -107,6 +100,13 @@ const selectPatientName = computed(
 
 // 点击查询按钮
 async function search() {
+    if (!selectPatient.value) {
+        ElMessage({
+            message: "请先选择就诊人",
+            type: 'error'
+        });
+        return;
+    }
     useCustomLoading().start({
         fullscreen: true,
         text: '加载中，请稍后'
