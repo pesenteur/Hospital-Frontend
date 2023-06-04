@@ -77,8 +77,16 @@
                 </template>
             </el-skeleton>
         </div>
-        <el-empty description="请选择科室及就诊时间" v-if="!$route.query.department"/>
-        <el-empty description="暂无放号信息" v-else-if="!vacancyList.length"/>
+        <el-empty
+            description="请选择科室及就诊时间"
+            v-if="!$route.query.department"
+            style="height: 540px"
+        />
+        <el-empty
+            description="暂无放号信息"
+            v-else-if="!vacancyList.length"
+            style="height: 540px"
+        />
     </div>
 </template>
 

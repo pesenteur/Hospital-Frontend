@@ -43,7 +43,11 @@
                 </el-table-column>
             </el-table>
         </div>
-        <el-empty description="请选择就诊人查询" v-else/>
+        <el-empty
+            description="请选择就诊人查询"
+            v-else
+            style="height: 580px;"
+        />
     </div>
 </template>
 

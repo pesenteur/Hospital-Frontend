@@ -65,6 +65,7 @@
         <el-empty
             description="什么都搜不到，试试换个关键词吧！"
             v-show="doctorList && !doctorList.length"
+            style="height: 500px;"
         />
     </div>
 </template>

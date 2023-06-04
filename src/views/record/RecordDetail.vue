@@ -104,7 +104,11 @@
                 </el-descriptions>
             </el-space>
         </div>
-        <el-empty v-else/>
+        <el-empty
+            description="暂时还没有病历记录哦!"
+            v-else
+            style="height: 500px;"
+        />
     </div>
 </template>
 
