@@ -68,12 +68,22 @@
                     </el-row>
                 </template>
                 <template #default>
-                    <Vacancy
-                        v-for="vacancy in vacancyList"
-                        :key="vacancy.id"
-                        :data="vacancy"
-                        class="item"
-                    />
+                    <template
+                        v-for="(vacancy,index) in vacancyList"
+                        :key="index"
+                    >
+                        <el-row :gutter="30" v-if="!(index%3)" class="item">
+                            <el-col
+                                :span="8"
+                                v-for="j in vacancyList.length-index > 3?3:vacancyList.length-index"
+                                :key="vacancyList[index+j-1].id"
+                            >
+                                <Vacancy
+                                    :data="vacancyList[index+j-1]"
+                                />
+                            </el-col>
+                        </el-row>
+                    </template>
                 </template>
             </el-skeleton>
         </div>
@@ -210,9 +220,6 @@ onBeforeRouteUpdate(async (to, from)=>{
 
 .vacancy {
     margin-top: 40px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
 }
 
 .item {
