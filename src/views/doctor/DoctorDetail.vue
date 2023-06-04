@@ -43,9 +43,10 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref} from "vue";
+import {inject, nextTick, onMounted, ref, watchEffect} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import useCustomLoading from "@/utils/loading";
 
 const router = useRouter();
 const route = useRoute();
@@ -64,6 +65,8 @@ async function getDetail() {
             type: 'error'
         });
     }
+    await nextTick();
+    useCustomLoading().end();
 }
 
 onMounted(()=>{

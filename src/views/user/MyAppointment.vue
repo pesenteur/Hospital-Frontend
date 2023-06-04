@@ -17,10 +17,10 @@
                 </el-select>
             </div>
             <div class="filter-item">
-                <el-button @click="getAppointmentList">查询</el-button>
+                <el-button @click="search">查询</el-button>
             </div>
         </div>
-        <div class="appointments">
+        <div class="appointments" v-if="searched">
             <el-table
                 :data="appointmentList"
             >
@@ -43,11 +43,13 @@
                 </el-table-column>
             </el-table>
         </div>
+        <el-empty description="请选择就诊人查询" v-else/>
     </div>
 </template>
 
 <script setup>
-import {computed, inject, onMounted, ref} from "vue";
+import {computed, inject, nextTick, onMounted, ref} from "vue";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 
@@ -70,8 +72,11 @@ async function getPatients() {
 
 // 存储预约信息
 const appointmentList = ref([]);
+// 是否进行过查询
+const searched = ref(false);
 // 发送请求获取预约信息
 async function getAppointmentList() {
+    searched.value = true;
     if (!selectPatient.value) {
         ElMessage({
             message: "请先选择就诊人",
@@ -88,16 +93,31 @@ async function getAppointmentList() {
             type: 'error'
         });
     }
+    await nextTick();
+    useCustomLoading().end();
 }
 // 当前选中的就诊人姓名
 const selectPatientName = computed(
-    ()=> patients.value.find(value => value.id === selectPatient.value).name
+    ()=> patients.value.find(value => value.id === selectPatient.value)?.name
 );
+
+// 点击查询按钮
+async function search() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
+    await getAppointmentList();
+}
 
 // 是否可以取消预约
 const canCancel = row=>row.appointment_status === '待就医' || row.appointment_status === '待支付';
 // 取消预约
 async function cancelAppointment(appointmentID) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.appointment.cancelAppointment(appointmentID);
     if (result.result === '1') {
         ElMessage({

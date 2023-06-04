@@ -62,8 +62,10 @@
                         :disabled="!available.left"
                         class="available-item"
                     >
-                        <div v-text="availableFormater(available)"></div>
-                        <div>余{{ available.left }}</div>
+                        <div class="available-detail">
+                            <div v-text="availableFormater(available)"></div>
+                            <div>余{{ available.left }}</div>
+                        </div>
                     </el-radio-button>
                 </el-radio-group>
             </div>
@@ -95,10 +97,11 @@
 
 <script setup>
 import {Plus} from "@element-plus/icons-vue";
-import {computed, inject, onMounted, ref, watch} from "vue";
+import {computed, inject, nextTick, onMounted, ref, watch, watchEffect} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import Pay from "@/views/appointment/Pay.vue";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 const route = useRoute();
@@ -116,6 +119,10 @@ const appointmentDate = computed(()=>{
     return `${year}年${month}月${day}日（星期${chinese[weekday]}）${half}`;
 });
 
+// 记录请求结果是否已返回
+const gotDoctorInfo = ref(false);
+const gotPatients = ref(false);
+const gotVacancyDetail = ref(false);
 // 存储医生信息
 const doctorInfo = ref({});
 // 获取医生信息
@@ -129,12 +136,13 @@ async function getDoctorInfo() {
             type: 'error'
         });
     }
+    gotDoctorInfo.value = true;
 }
 
 // 存储选择的就诊人
 const selectPatient = ref();
 // 存储就诊人列表
-const patients = ref([]);
+const patients = ref();
 // 获取就诊人列表
 async function getPatients() {
     const result = await $api.user.requestPatients();
@@ -146,6 +154,7 @@ async function getPatients() {
             type: 'error'
         });
     }
+    gotPatients.value = true;
 }
 // 选择添加就诊人时，跳转到/patient
 watch(selectPatient, (newValue)=>{
@@ -173,6 +182,7 @@ async function getVacancyDetail() {
             type: 'error'
         });
     }
+    gotVacancyDetail.value = true;
 }
 // 格式化可预约时间段
 function availableFormater(available) {
@@ -233,6 +243,14 @@ onMounted(()=>{
     getPatients();
     getVacancyDetail();
 });
+watchEffect(()=>{
+    if (gotDoctorInfo.value
+        && gotPatients.value
+        && gotVacancyDetail.value
+    ) {
+        nextTick(()=>useCustomLoading().end());
+    }
+});
 
 // 页头及取消按钮的返回操作
 function goBack() {
@@ -291,6 +309,11 @@ function goBack() {
 
 .available-item {
     margin: 0 25px 20px 0;
+}
+
+.available-detail {
+    display: flex;
+    flex-direction: column;
 }
 
 .button {

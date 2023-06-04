@@ -1,14 +1,24 @@
 <template>
     <div class="main">
         <roll-notification/>
-        <el-carousel height="400px">
-            <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
-                <a :href="carousel.link"><el-image :src="carousel.img" class="carousel"/></a>
-            </el-carousel-item>
-        </el-carousel>
+        <el-skeleton :loading="loading" animated>
+            <template #template>
+                <el-skeleton-item
+                    variant="image"
+                    style="height: 400px"
+                />
+            </template>
+            <template #default>
+                <el-carousel height="400px">
+                    <el-carousel-item v-for="carousel in carouselList" :key="carousel.id">
+                        <a :href="carousel.link"><el-image :src="carousel.img" class="carousel"/></a>
+                    </el-carousel-item>
+                </el-carousel>
+            </template>
+        </el-skeleton>
         <el-row class="board">
-            <Board title="通知" :data="notificationList"/>
-            <Board title="新闻" :data="newsList"/>
+            <Board title="通知" :data="notificationList" target="notification" :loading="loading"/>
+            <Board title="新闻" :data="newsList" target="news" :loading="loading"/>
         </el-row>
     </div>
 </template>
@@ -16,12 +26,12 @@
 <script setup>
 import Board from "@/views/home/Board.vue";
 import RollNotification from "@/views/home/RollNotification.vue";
-import {inject, onMounted, ref} from "vue";
+import {computed, inject, onMounted, ref} from "vue";
 
 const $api = inject('$api');
 
 // 存储轮播图信息
-const carouselList = ref([]);
+const carouselList = ref();
 
 // 获取轮播图信息
 async function getCarouselList() {
@@ -65,6 +75,8 @@ async function getNewsList() {
         });
     }
 }
+// 是否处于加载状态
+const loading = computed(()=>!carouselList.value || !notificationList.value || !newsList.value);
 
 onMounted(async ()=>{
     await getCarouselList();

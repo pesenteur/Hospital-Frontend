@@ -30,11 +30,12 @@
 </template>
 
 <script setup>
-import {inject, onMounted, ref} from "vue";
+import {inject, nextTick, onMounted, ref} from "vue";
 import {Delete} from "@element-plus/icons-vue";
 import AddPatient from "@/views/user/AddPatient.vue";
 import PatientDetail from "@/views/user/PatientDetail.vue";
 import {ElMessage} from "element-plus";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 
@@ -51,10 +52,16 @@ async function getPatients() {
             type: 'error'
         });
     }
+    await nextTick();
+    useCustomLoading().end();
 }
 
 // 发送请求更改就诊人信息
 async function updatePatientInfo(data) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.user.updatePatient(
         data.id, data.name, data.gender, data.identification,
         data.phone, data.address
@@ -77,6 +84,10 @@ async function updatePatientInfo(data) {
 const display = ref(false);
 // 发送请求添加就诊者
 async function addNewPatient(info) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.user.addPatient(
         info.name, info.identification, info.phone, info.address
     );
@@ -110,6 +121,10 @@ async function removePatient(patient) {
 }
 
 async function removePatients(patients) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.user.deletePatient(patients);
     if (result.result === '1') {
         ElMessage({

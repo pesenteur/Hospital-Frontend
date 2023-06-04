@@ -3,32 +3,56 @@
         <template #header>
             <div class="card-header">
                 <span>{{props.title}}</span>
-                <el-link class="right">更多</el-link>
+                <router-link :to="`/${target}`" class="right">更多</router-link>
             </div>
         </template>
-        <a v-for="item in props.data" :key="item.id" :href="item.link" class="item">
-            <div class="text">
-                {{ item.title }}
-            </div>
-            <div class="date">
-                {{item.date}}
-            </div>
-        </a>
+
+        <el-skeleton :loading="loading" animated>
+            <template #template>
+                <el-skeleton-item
+                    v-for="i in 10"
+                    :key="i"
+                    style="height: 24px; margin-bottom: 10px"
+                />
+            </template>
+            <template #default>
+                <router-link
+                    v-for="item in props.data"
+                    :key="item.id"
+                    :to="`/${target}/${item.id}`"
+                    class="item"
+                >
+                    <div class="text">
+                        {{ item.title }}
+                    </div>
+                    <div class="date">
+                        {{item.date}}
+                    </div>
+                </router-link>
+            </template>
+        </el-skeleton>
     </el-card>
 </template>
 
 <script setup>
-const props = defineProps(['title', 'data']);
+const props = defineProps(['title', 'data', 'target', 'loading']);
 
 </script>
 
 <style scoped>
 .box-card {
     width: 45%;
+    height: 460px;
 }
 
 .right {
     float: right;
+    font-size: 14px;
+    opacity: 60%;
+}
+
+.right:hover {
+    color: #409eff;
 }
 
 .item {
@@ -48,6 +72,7 @@ const props = defineProps(['title', 'data']);
 .text:hover {
     color: red;
     text-decoration: underline;
+    cursor: pointer;
 }
 
 .date {
