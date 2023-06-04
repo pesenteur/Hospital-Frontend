@@ -45,6 +45,11 @@
                 </ul>
             </template>
         </el-skeleton>
+        <el-empty
+            description="啊哦~暂无内容"
+            v-if="data && !data.length"
+            style="height: 360px;"
+        />
     </div>
 </template>
 

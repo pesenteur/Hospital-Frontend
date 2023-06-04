@@ -280,6 +280,7 @@ function goBack() {
 
 .text {
     margin-left: 30px;
+    overflow: hidden;
 }
 
 .name {
@@ -289,8 +290,9 @@ function goBack() {
 
 .detail {
     font-size: 0.8em;
-    width: 200px;
+    width: 700px;
     height: 60px;
+    margin-top: 3px;
 }
 
 .info {

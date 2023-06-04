@@ -42,8 +42,16 @@
                 <record-detail :data="records"/>
             </div>
         </div>
-        <el-empty description="无候诊患者" v-else-if="!waitingPatients.length"/>
-        <el-empty description="请选择患者" v-else/>
+        <el-empty
+            description="无候诊患者"
+            v-else-if="!waitingPatients?.length"
+            style="height: 520px;"
+        />
+        <el-empty
+            description="请选择患者"
+            v-else
+            style="height: 520px;"
+        />
         <add-record
             v-model="display"
             :data="data"

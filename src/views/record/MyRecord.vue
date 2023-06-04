@@ -23,7 +23,11 @@
         <div class="record" v-if="query">
             <record-detail :data="records"/>
         </div>
-        <el-empty description="请选择就诊人查询病历记录" v-else/>
+        <el-empty
+            description="请选择就诊人查询病历记录"
+            v-else
+            style="height: 580px;"
+        />
     </div>
 </template>
 
