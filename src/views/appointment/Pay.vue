@@ -46,13 +46,15 @@ const url = computed(()=>new URL(`/confirm-pay/${props.payment_id}`,
 // 生成二维码
 const qrcode = useQRCode(url);
 // 定时器、支付状态
-let timer, success = false, left;
+let timer;
+const success = ref(false);
+const left = ref();
 watchEffect(()=>{
     if (display.value) {
         timer = setInterval(async ()=>{
             const result = await $api.appointment.requestPayStatus(props.payment_id);
             if (result.result === '1') {
-                success = result.status === '已支付';
+                success.value = result.status === '已支付';
             } else {
                 ElMessage({
                     message: result.message || '查询支付状态失败',
@@ -62,11 +64,11 @@ watchEffect(()=>{
                 emit('failed');
                 display.value = false;
             }
-            if (success) {
+            if (success.value) {
                 clearInterval(timer);
-                left = 3;
+                left.value = 3;
                 timer = setInterval(()=>{
-                    left--;
+                    left.value--;
                     if (!left) {
                         clearInterval(timer);
                         emit('success');

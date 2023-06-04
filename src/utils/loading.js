@@ -1,15 +1,12 @@
 import {ElLoading} from "element-plus";
 
-let loading, timer;
+let loading;
 
 function start(options) {
-    timer = setTimeout(()=> {
-        loading = ElLoading.service(options)
-    }, 50);
+    loading = ElLoading.service(options);
 }
 
 function end() {
-    clearTimeout(timer);
     if (loading) {
         loading.close();
         loading = null;

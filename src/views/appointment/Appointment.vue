@@ -28,12 +28,54 @@
             </div>
         </div>
         <div class="vacancy">
-            <Vacancy
-                v-for="vacancy in vacancyList"
-                :key="vacancy.id"
-                :data="vacancy"
-                class="item"
-            />
+            <el-skeleton :loading="loading" animated>
+                <template #template>
+                    <el-row :gutter="40" v-for="i in 2" :key="i" style="margin-bottom: 60px;">
+                        <el-col
+                            :span="8"
+                            v-for="j in 3"
+                            :key="j"
+                        >
+                            <el-card shadow="never">
+                                <div style="display:flex; align-items: center">
+                                    <el-skeleton-item
+                                        variant="circle"
+                                        style="height: 60px;width: 60px"
+                                    />
+                                    <div style="display:flex;flex-direction: column;margin-left: 10px;">
+                                        <el-skeleton-item
+                                            variant="h1"
+                                            style="height: 25px; width: 120px"
+                                        />
+                                        <el-skeleton-item
+                                            variant="h3"
+                                            style="margin-top: 10px;height: 15px; width: 80px;"
+                                        />
+                                    </div>
+                                </div>
+                                <el-skeleton-item
+                                    variant="rect"
+                                    style="margin-top: 20px;"
+                                />
+                                <el-skeleton-item
+                                    v-for="k in 5"
+                                    :key="k"
+                                    variant="rect"
+                                    style="margin-top: 10px;"
+                                />
+                            </el-card>
+                        </el-col>
+                    </el-row>
+                </template>
+                <template #default>
+                    <Vacancy
+                        v-for="vacancy in vacancyList"
+                        :key="vacancy.id"
+                        :data="vacancy"
+                        class="item"
+                    />
+                </template>
+            </el-skeleton>
         </div>
         <el-empty description="请选择科室及就诊时间" v-if="!$route.query.department"/>
         <el-empty description="暂无放号信息" v-else-if="!vacancyList.length"/>
@@ -44,6 +86,7 @@
 import {inject, onMounted, ref} from "vue";
 import Vacancy from "@/views/appointment/Vacancy.vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
+import DoctorCard from "@/views/doctor/DoctorCard.vue";
 
 const router = useRouter();
 const route = useRoute();
@@ -73,13 +116,13 @@ async function getDepartmentList() {
 
 // 选取的部门
 const department = ref();
-onMounted(async () => {
-    await getDepartmentList();
+onMounted(() => {
+    getDepartmentList();
     department.value = route.query.department * 1;
     date.value = route.query.date;
     if (!department.value || !date.value)
         return;
-    await getVacancyList();
+    getVacancyList();
 });
 
 // 存储预约时间
@@ -93,11 +136,14 @@ function checkDate(selectDate) {
     return selectDate <= today || selectDate >= latest;
 }
 
+// 是否处于加载状态
+const loading = ref(false);
 // 存储放号信息
 const vacancyList = ref([]);
 
 // 获取放号信息
 async function getVacancyList() {
+    loading.value = true;
     const result = await $api.appointment.requestVacancyList(department.value, date.value);
     if (result.result === "1") {
         vacancyList.value = result.data;
@@ -107,6 +153,7 @@ async function getVacancyList() {
             type: 'error'
         });
     }
+    loading.value=false;
 }
 function search() {
     if (!department.value || !date.value) {

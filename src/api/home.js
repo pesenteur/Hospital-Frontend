@@ -28,4 +28,18 @@ export default {
             }
         });
     },
+    // 请求通知内容
+    requestNotificationDetail(id) {
+        return requests({
+            url: `/notificationDetail/${id}`,
+            method: 'GET'
+        });
+    },
+    // 请求新闻内容
+    requestNewsDetail(id) {
+        return requests({
+            url: `/newsDetail/${id}`,
+            method: 'GET'
+        });
+    }
 }

@@ -23,7 +23,7 @@ requests.interceptors.request.use(config=>{
 requests.interceptors.response.use(response=> {
     return response.data
 }, error => {
-    if (error.response.status === 401) {
+    if (error.response && error.response.status === 401) {
         const accountStore = useAccountStore();
         accountStore.logout();
         router.push({
@@ -36,11 +36,13 @@ requests.interceptors.response.use(response=> {
             message: 'token失效，请重新登录',
             type: 'error'
         });
-    } else if (!error.response.data.result) {
-        error.response.data = {
-            result: '0',
-            message: '未知错误，请稍后重试'
-        };
+    } else if (!error.response?.data.result) {
+        error.response = {
+            data: {
+                result: '0',
+                message: '未知错误，请稍后重试'
+            }
+        }
     }
     return error.response.data;
 });

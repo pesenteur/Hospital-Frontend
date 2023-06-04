@@ -30,7 +30,10 @@ const router = createRouter({
     }, {
         path: '/doctor-detail/:doctorID',
         name: 'doctor-detail',
-        component: () => import('@/views/doctor/DoctorDetail.vue')
+        component: () => import('@/views/doctor/DoctorDetail.vue'),
+        meta: {
+            loading: true
+        }
     }, {
         path: '/appointment',
         name: 'appointment',
@@ -40,7 +43,8 @@ const router = createRouter({
         name: 'appointment-detail',
         component: () => import('@/views/appointment/AppointmentDetail.vue'),
         meta: {
-            perm: 'user'
+            perm: 'user',
+            loading: true
         }
     }, {
         path: '/userinfo',
@@ -54,7 +58,8 @@ const router = createRouter({
         name: 'patient',
         component: () => import('@/views/user/Patient.vue'),
         meta: {
-            perm: 'user'
+            perm: 'user',
+            loading: true
         }
     }, {
         path: '/my-appointment',
@@ -163,6 +168,10 @@ router.beforeEach(async (to, from)=>{
     }
 });
 
-router.afterEach(()=>nextTick(useCustomLoading().end));
+router.afterEach(to=> {
+    if (!to.meta.loading) {
+        nextTick(useCustomLoading().end).then(() => {});
+    }
+});
 
 export default router
