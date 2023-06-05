@@ -6,7 +6,7 @@ import router from "@/router";
 
 // 1. 创建axios实例
 const requests = axios.create({
-    baseURL: 'http://azure.pesenteur.eu.org:5555/api',
+    baseURL: '/api',
     timeout: 5000
 });
 
