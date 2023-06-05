@@ -38,7 +38,7 @@ watch(currentPage, (newPage)=>{
 });
 
 // 存储通知数据
-const data = ref([]);
+const data = ref();
 // 发送请求获取数据
 async function getData() {
     const offset = (currentPage.value - 1) * pageSize.value + 1;

@@ -38,4 +38,6 @@ jobs:
             sudo docker rm hospital -f
             sudo docker rmi ${{ secrets.DOCKER_REPOSITORY }}
             sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
-            sudo docker run -d -p 80:80 --name hospital ${{ secrets.DOCKER_REPOSITORY }}
+            sudo docker run -d -p 80:80 \
+            --restart=unless-stopped \
+            --name hospital ${{ secrets.DOCKER_REPOSITORY }}
