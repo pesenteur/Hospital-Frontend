@@ -12,7 +12,7 @@
                 <el-table-column property="type" label="类型"/>
                 <el-table-column property="reason" label="请假理由" show-overflow-tooltip/>
                 <el-table-column property="leave_status" label="状态"/>
-                <el-table-column label="Operations">
+                <el-table-column label="操作">
                     <template #default="{row}">
                         <el-button
                             size="small"
@@ -33,6 +33,7 @@
 import RequestLeave from "@/views/leave/RequestLeave.vue";
 import {inject, onMounted, ref} from "vue";
 import {ElMessage} from "element-plus";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 
@@ -49,6 +50,7 @@ async function getLeaveList() {
             type: 'error'
         });
     }
+    useCustomLoading().end();
 }
 
 // 新增请假申请
@@ -56,6 +58,10 @@ async function getLeaveList() {
 const display = ref(false);
 // 发请求请假
 async function makeLeave(data) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.leave.makeLeave(
         data.dateRange[0],
         data.dateRange[1],
@@ -78,6 +84,10 @@ async function makeLeave(data) {
 
 // 发请求取消请假
 async function cancelLeave(leaveID) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     const result = await $api.leave.cancelLeave(leaveID);
     if (result.result === '1') {
         ElMessage({

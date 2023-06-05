@@ -87,14 +87,16 @@ const router = createRouter({
         name: 'diagnose',
         component: () => import('@/views/diagnose/Diagnose.vue'),
         meta: {
-            perm: 'doctor'
+            perm: 'doctor',
+            loading: true
         }
     }, {
         path: '/leave',
         name: 'leave',
         component: () => import('@/views/leave/Leave.vue'),
         meta: {
-            perm: 'doctor'
+            perm: 'doctor',
+            loading: true
         }
     }, {
         path: '/message',
