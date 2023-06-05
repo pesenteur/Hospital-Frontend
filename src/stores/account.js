@@ -72,6 +72,14 @@ const actions = {
             return Promise.reject(result.message);
         }
     },
+    async resetPassword(phone_number, vertification_code, new_password) {
+        const result = await accountAPI.resetPassword(phone_number, vertification_code, new_password);
+        if (result.result === '1') {
+            return '修改成功'
+        } else {
+            return Promise.reject(result.message);
+        }
+    },
     async updatePhone(new_phone_number, vertification_code) {
         const result = await accountAPI.updatePhone(new_phone_number, vertification_code);
         if (result.result === '1') {

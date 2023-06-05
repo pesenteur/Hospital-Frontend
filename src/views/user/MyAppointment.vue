@@ -32,6 +32,14 @@
                 <el-table-column label="操作">
                     <template #default="{ row }">
                         <el-button
+                            type="primary"
+                            size="small"
+                            v-if="canPay(row)"
+                            @click="startPay(row.appointment_id)"
+                        >
+                            支付费用
+                        </el-button>
+                        <el-button
                             type="danger"
                             size="small"
                             v-if="canCancel(row)"
@@ -49,11 +57,18 @@
             style="height: 580px;"
         />
     </div>
+    <pay
+        v-model="start_pay"
+        :payment_id="payment_id"
+        @success="afterPay"
+    />
 </template>
 
 <script setup>
 import {computed, inject, nextTick, onMounted, ref} from "vue";
 import useCustomLoading from "@/utils/loading";
+import {ElMessage} from "element-plus";
+import Pay from "@/views/appointment/Pay.vue";
 
 const $api = inject('$api');
 
@@ -133,6 +148,46 @@ async function cancelAppointment(appointmentID) {
         ElMessage({
             message: result.message || "取消失败，请重试",
             type: 'error'
+        });
+    }
+}
+
+// 是否可以支付
+const canPay = row=>row.appointment_status === '待支付';
+// 是否显示支付弹窗
+const start_pay = ref(false);
+const payment_id = ref(1);
+// 支付成功后更改状态
+function afterPay() {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
+    getAppointmentList();
+}
+// 获取支付订单号
+async function getPayment(appointmentID) {
+    const result = await $api.appointment.requestPayment(appointmentID);
+    if (result.result === '1') {
+        payment_id.value = result.data.payment_id;
+    } else {
+        return Promise.reject(result.message || "获取支付订单，请重试");
+    }
+}
+// 点击支付
+async function startPay(appointmentID) {
+    try {
+        useCustomLoading().start({
+            fullscreen: true,
+            text: '加载中，请稍后'
+        });
+        await getPayment(appointmentID);
+        start_pay.value = true;
+        useCustomLoading().end();
+    } catch (err) {
+        ElMessage({
+            message: err.message,
+            type: "error"
         });
     }
 }

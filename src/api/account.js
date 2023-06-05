@@ -63,5 +63,14 @@ export default {
                 new_phone_number, vertification_code
             }
         });
+    },
+    resetPassword(phone_number, vertification_code, new_password) {
+        return requests({
+            url: '/resetPassword',
+            method: 'POST',
+            data: {
+                phone_number, vertification_code, new_password
+            }
+        });
     }
 }

@@ -24,6 +24,13 @@ const router = createRouter({
             'hiddenHeader': true
         }
     }, {
+        path: '/reset-password',
+        name: 'reset-password',
+        component: () => import('@/views/account/ResetPassword.vue'),
+        meta: {
+            'hiddenHeader': true
+        }
+    }, {
         path: '/doctor',
         name: 'doctor',
         component: () => import('@/views/doctor/Doctor.vue')

@@ -15,7 +15,7 @@
             <div>将在{{ left }}秒后自动关闭</div>
         </div>
         <template #footer>
-            <el-button type="danger" @click="cancel">暂不支付</el-button>
+            <el-button type="danger" @click="cancel" v-if="!success">暂不支付</el-button>
         </template>
     </el-dialog>
 </template>
@@ -69,7 +69,7 @@ watchEffect(()=>{
                 left.value = 3;
                 timer = setInterval(()=>{
                     left.value--;
-                    if (!left) {
+                    if (!left.value) {
                         clearInterval(timer);
                         emit('success');
                         display.value = false;
@@ -82,7 +82,7 @@ watchEffect(()=>{
 
 // 暂不支付
 function cancel() {
-    ElMessageBox.confirm('退出后订单将保留三十分钟，请于三十分钟内支付', '确认退出', {
+    ElMessageBox.confirm('订单有效期仅有三十分钟，请于及时支付', '确认退出', {
         confirmButtonText: '仍然退出',
         cancelButtonText: '继续支付',
         type: 'warning'
