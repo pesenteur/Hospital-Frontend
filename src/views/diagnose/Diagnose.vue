@@ -67,6 +67,7 @@ import AddRecord from "@/views/diagnose/AddRecord.vue";
 import {inject, onMounted, ref, watch} from "vue";
 import {ElMessage} from "element-plus";
 import PatientDetail from "@/views/user/PatientDetail.vue";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 
@@ -104,6 +105,7 @@ async function getPatientInfo() {
     const result = await $api.user.requestPatientDetail(selectPatient.value);
     if (result.result === '1') {
         patientInfo.value = result.data;
+        data.value = isWaiting() ? {} : records.value[0];
     } else {
         ElMessage({
             message: result.message || "查询患者信息失败，请重试",
@@ -131,16 +133,19 @@ async function getRecords() {
 const data = ref();
 // 监视当前就诊患者的变化
 watch(selectPatient, async newvalue=>{
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     if (!selectPatient.value) {
         patientInfo.value = {};
         records.value = [];
+        useCustomLoading().end();
         return;
     }
     await getRecords();
     await getPatientInfo();
-});
-watch(patientInfo, newValue=>{
-    data.value = isWaiting() ? {} : records.value[0];
+    useCustomLoading().end();
 });
 
 // 诊断、修改病历
@@ -159,6 +164,10 @@ function getDate() {
 }
 // 更新（创建）病历
 async function updateRecord(info) {
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
     info.medical_record_date = getDate();
     info.patient_id = selectPatient.value;
     const result = await $api.diagnose.makeMedicalrecord(info);
@@ -175,16 +184,20 @@ async function updateRecord(info) {
             type: 'error'
         });
     }
+    useCustomLoading().end();
 }
 
 // 下一位患者
 function nextPatient() {
-    console.log('in')
-    selectPatient.value = waitingPatients[0]?.patient_id;
+    const index = waitingPatients.value.findIndex(item=>item.patient_id === selectPatient.value);
+    selectPatient.value = waitingPatients.value[index+1]?.patient_id;
 }
 
 onMounted(()=>{
-    getWaitingPatients();
+    getWaitingPatients().then(()=> {
+        useCustomLoading().end();
+        selectPatient.value = finishedPatients.value.at(-1).patient_id;
+    });
 });
 </script>
 
