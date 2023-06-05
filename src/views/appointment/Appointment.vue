@@ -105,6 +105,7 @@ import {inject, onMounted, ref} from "vue";
 import Vacancy from "@/views/appointment/Vacancy.vue";
 import {onBeforeRouteUpdate, useRoute, useRouter} from "vue-router";
 import DoctorCard from "@/views/doctor/DoctorCard.vue";
+import useCustomLoading from "@/utils/loading";
 
 const router = useRouter();
 const route = useRoute();
@@ -135,7 +136,7 @@ async function getDepartmentList() {
 // 选取的部门
 const department = ref();
 onMounted(() => {
-    getDepartmentList();
+    getDepartmentList().then(()=>useCustomLoading().end());
     department.value = route.query.department * 1;
     date.value = route.query.date;
     if (!department.value || !date.value)

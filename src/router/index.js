@@ -44,7 +44,10 @@ const router = createRouter({
     }, {
         path: '/appointment',
         name: 'appointment',
-        component: () => import('@/views/appointment/Appointment.vue')
+        component: () => import('@/views/appointment/Appointment.vue'),
+        meta: {
+            loading: true
+        }
     }, {
         path: '/appointment-detail/:doctorID/:date/:half',
         name: 'appointment-detail',
@@ -80,7 +83,8 @@ const router = createRouter({
         name: 'my-record',
         component: () => import('@/views/record/MyRecord.vue'),
         meta: {
-            perm: 'user'
+            perm: 'user',
+            loading: true
         }
     }, {
         path: '/diagnose',

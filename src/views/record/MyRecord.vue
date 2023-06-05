@@ -17,7 +17,7 @@
                 </el-select>
             </div>
             <div class="filter-item">
-                <el-button @click="getRecords">查询</el-button>
+                <el-button @click="queryRecord">查询</el-button>
             </div>
         </div>
         <div class="record" v-if="query">
@@ -34,6 +34,7 @@
 <script setup>
 import RecordDetail from "@/views/record/RecordDetail.vue";
 import {inject, onMounted, ref, watch} from "vue";
+import useCustomLoading from "@/utils/loading";
 
 const $api = inject('$api');
 
@@ -72,8 +73,25 @@ async function getRecords() {
     }
 }
 
+// 点击查询按钮
+async function queryRecord() {
+    if (!selectPatient.value) {
+        ElMessage({
+            message: '请选择就诊人！',
+            type: 'info'
+        });
+        return;
+    }
+    useCustomLoading().start({
+        fullscreen: true,
+        text: '加载中，请稍后'
+    });
+    await getRecords();
+    useCustomLoading().end();
+}
+
 onMounted(()=>{
-    getPatients();
+    getPatients().then(()=>useCustomLoading().end());
 });
 </script>
 
