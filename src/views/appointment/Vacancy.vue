@@ -32,10 +32,10 @@ const props = defineProps(['data']);
 const format = (item)=>{
     const chinese = ['日', '一', '二', '三', '四', '五', '六'];
     const date = new Date(item.time);
-    const month = date.getMonth();
+    const month = date.getUTCMonth();
     const day = date.getDate();
     const weekday = date.getDay();
-    return `${month}月${day}日（星期${chinese[weekday]}）${item.is_morning?'上午':'下午'}`;
+    return `${month+1}月${day}日（星期${chinese[weekday]}）${item.is_morning?'上午':'下午'}`;
 }
 </script>
 

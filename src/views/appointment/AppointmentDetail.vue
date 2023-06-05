@@ -113,7 +113,7 @@ const appointmentDate = computed(()=>{
     const chinese = ['日', '一', '二', '三', '四', '五', '六'];
     const temp = new Date(date);
     const year = temp.getUTCFullYear();
-    const month = temp.getMonth();
+    const month = temp.getUTCMonth() + 1;
     const day = temp.getDate();
     const weekday = temp.getDay();
     return `${year}年${month}月${day}日（星期${chinese[weekday]}）${half}`;

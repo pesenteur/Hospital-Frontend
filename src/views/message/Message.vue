@@ -43,8 +43,9 @@
 
 <script setup>
 import MessageCard from "@/views/message/MessageCard.vue";
-import {inject, onMounted, ref} from "vue";
+import {inject, onMounted, ref, watchEffect} from "vue";
 import {ElMessage} from "element-plus";
+import {useAccountStore} from "@/stores/account";
 
 const $api = inject('$api');
 
@@ -63,6 +64,15 @@ async function getMessages() {
     }
 }
 
+watchEffect(()=>{
+    if (!messages.value?.length) {
+        return;
+    }
+    if (!messages.value.find(item=>!item.is_read)?.id) {
+        useAccountStore().unreadMessage = false;
+    }
+})
+
 onMounted(()=>{
     getMessages().then(()=>{
         const id = messages.value.find(item=>!item.is_read)?.id;
@@ -70,7 +80,6 @@ onMounted(()=>{
             return;
         }
         const unread = document.querySelector(`#message${id}`);
-        console.log(unread)
         unread.scrollIntoView({
             behavior: 'auto',
             block: 'center'
