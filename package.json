@@ -20,6 +20,7 @@
     "pinia": "^2.0.32",
     "qrcode": "^1.5.3",
     "unplugin-icons": "^0.16.1",
+    "url": "^0.11.1",
     "vue": "^3.2.47",
     "vue-cropperjs": "^5.0.0",
     "vue-router": "^4.1.6"
